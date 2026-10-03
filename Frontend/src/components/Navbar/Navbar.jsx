@@ -15,6 +15,21 @@ export default function Navbar({ autenticado }) {
     let tokenActual = localStorage.getItem('token');
 
     
+	fetch(`${API_URL}/fotousuario`, {
+	    method: 'POST',
+	    headers: {
+	        'Content-Type': 'application/json',
+	        'Authorization': 'Bearer ' + tokenActual
+	    },
+	    body: JSON.stringify({})
+	})
+	    .then(response => response.json())
+	    .then(data => {
+	        setimagen(data.foto_perfil);
+	    })
+	    .catch(error => console.error('Error al obtener foto:', error));
+	
+	
     useEffect(() => {
         if (!tokenActual) {
             console.log("no estas logeado");
@@ -37,19 +52,7 @@ export default function Navbar({ autenticado }) {
             .catch(error => console.error('Error al verificar JWT:', error));
 
         
-        fetch(`${API_URL}/fotousuario`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + tokenActual
-            },
-            body: JSON.stringify({})
-        })
-            .then(response => response.json())
-            .then(data => {
-                setimagen(data.foto_perfil);
-            })
-            .catch(error => console.error('Error al obtener foto:', error));
+
     }, [tokenActual]);
 
     

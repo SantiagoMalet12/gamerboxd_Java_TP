@@ -301,10 +301,7 @@ public class Data_persona {
 		Connection conn = Conexion.getInstancia().getConn();
 		
 		try {
-		
-		
-	    
-	    
+		    
 	    try(PreparedStatement ps = conn.prepareStatement(query)){
 	    	ps.setString(1, mail);
 	    	try(ResultSet rs = ps.executeQuery()){

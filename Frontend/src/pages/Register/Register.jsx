@@ -38,11 +38,14 @@ function Registro(){
 				},
 			});
 			
-			if (res.ok) {
+			if (res.status === 200) {
                 setAlerta({ tipo: 'ok', mensaje: "¡Usuario registrado con éxito!" });
+				console.log(res.status);
+				
                 setTimeout(() => {
                     navigate("/login");
                 }, 2000);
+				
 			} else if (res.status === 409) {
                 setAlerta({ tipo: 'error', mensaje: "Ya existe un usuario con ese correo o nombre." });
                 setTimeout(() => setAlerta(null), 5000);

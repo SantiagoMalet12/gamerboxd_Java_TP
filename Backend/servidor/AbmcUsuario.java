@@ -878,6 +878,8 @@ public class AbmcUsuario {
 		
 		public void handle(HttpExchange exchange) throws IOException {
 			
+			Persona persona_repetida = new Persona();
+			String var;
 	
 			Cors.controlCors(exchange);
 			
@@ -898,26 +900,40 @@ public class AbmcUsuario {
 			Gson gson = new Gson();
 			Persona per = gson.fromJson(body, Persona.class);	
 			
+			persona_repetida = Data_persona.buscar_solo_persona_pormail(per.getMail());
 			
+			if(persona_repetida == null || persona_repetida.getMail() == null) {
+				
+				var = "noexiste";			
+			}	
+			else {
+				var = persona_repetida.getMail();
+			}
 			
-			Data_persona.insertar_persona(per.getNombre_usuario(), per.getContrasena(), per.getMail(), "usuario", per.getFoto_perfil());
+			if( var.equals(per.getMail())) {
+				
+				mensaje = "usuario duplicadoooo";
+		        exchange.sendResponseHeaders(409, mensaje.getBytes().length);
+		        OutputStream os = exchange.getResponseBody();
+	            os.write(mensaje.getBytes()); 
+	            os.close();
+			}
 			
+			else {
 			
+			Data_persona.insertar_persona(per.getNombre_usuario(), per.getContrasena(), per.getMail(), "usuario", per.getFoto_perfil());		
 			exchange.sendResponseHeaders(200, mensaje.getBytes().length);
 			OutputStream os = exchange.getResponseBody();
             os.write(mensaje.getBytes()); 
             os.close();
+			}
 			
 			}catch (SQLException e) {
 			    System.out.println(e.getErrorCode());
 
-			    if (e.getErrorCode() == 1062) {
-			        mensaje = "usuario duplicadoooo";
-			        exchange.sendResponseHeaders(409, mensaje.getBytes().length);
-			    } else {
-			        mensaje = "error al acceder a la bd";
-			        exchange.sendResponseHeaders(403, mensaje.getBytes().length);
-			    }
+			    mensaje = "error al acceder a la bd";
+			    exchange.sendResponseHeaders(403, mensaje.getBytes().length);
+			    
 			    
 			    OutputStream os = exchange.getResponseBody();
 			    os.write(mensaje.getBytes());
