@@ -320,7 +320,9 @@ function JuegoResenia(){
 								          className="user-avatar" 
 								        />
 								  <strong>{r.usuario.nombre_usuario}</strong>
+								  
 								</div>
+								<p className='review-card-nombre-grupo'>Nombre de grupo </p> 
 	
 								{esPropia && (
 									<div className="botones-accion-resenia">
