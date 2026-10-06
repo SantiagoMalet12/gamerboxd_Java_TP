@@ -83,6 +83,17 @@
 
 }
 
+.juego-alerta-wrapper {
+    width: 50%;
+    max-width: 450px;
+    margin: 0 auto 4vh auto;
+    display: flex;
+    justify-content: center;
+}
+
+.juego-alerta-wrapper > div {
+    margin: 0 auto;
+}
 
 .user-avatar {
   width: 40px; 

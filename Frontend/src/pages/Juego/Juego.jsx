@@ -225,7 +225,15 @@ function JuegoResenia(){
 					<img src={juego.background_image}/>
 				</div>
 		      </header>
-	
+			  {alerta && (
+			              <div classname="juego-alerta-wrapper">
+			                  <AlertMessage 
+			                      tipo={alerta.tipo} 
+			                      mensaje={alerta.mensaje} 
+			                      onClose={() => setAlerta(null)} 
+			                  />
+			              </div>
+			          )}
 		      <section className="reviews-section">
 			  
 
@@ -297,13 +305,7 @@ function JuegoResenia(){
 		        						<button type="button" className="btn-secundario" onClick={() => setEditando(false)}>Cancelar</button>
 		        					</div>
 		        				</form>
-								{alerta && (
-					                <AlertMessage 
-					                    tipo={alerta.tipo} 
-					                    mensaje={alerta.mensaje} 
-					                    onClose={() => setAlerta(null)} 
-					                />
-					            )}
+								
 		        			</div>
 							
 							
@@ -347,7 +349,6 @@ function JuegoResenia(){
 						
 						
 			          </div>
-					  
 			        ); })}
 		        
 		      </section>
