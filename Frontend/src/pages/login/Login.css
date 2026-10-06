@@ -11,16 +11,12 @@
 .login-alerta-wrapper {
     width: 90%;
     max-width: 450px;
-    margin: 0 auto 0 auto;
+    margin: 0 auto 4vh auto;
     display: flex;
     justify-content: center;
 }
 
 .login-alerta-wrapper > div {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    transform: none !important;
     margin: 0 auto;
 }
 
@@ -30,7 +26,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height:100vh;
+    flex-direction: column; 
+    gap: 50vh;
+    margin-top:10vh;
+    margin-bottom:10vh;
 }
 
 

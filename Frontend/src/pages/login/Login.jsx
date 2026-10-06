@@ -122,14 +122,14 @@ function Login({ setAuth }){
 				
             </div>
 			{alerta !== null && (
-							                <div className="login-alerta-wrapper">
-							                    <AlertMessage 
-							                        tipo={alerta.tipo} 
-							                        mensaje={alerta.mensaje} 
-							                        onClose={() => setAlerta(null)} 
-							                    />
-							                </div>
-							            )}
+										                <div className="login-alerta-wrapper">
+										                    <AlertMessage 
+										                        tipo={alerta.tipo} 
+										                        mensaje={alerta.mensaje} 
+										                        onClose={() => setAlerta(null)} 
+										                    />
+										                </div>
+										            )}
 			
             
             <Footer />

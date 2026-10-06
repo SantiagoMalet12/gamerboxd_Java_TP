@@ -67,7 +67,7 @@ export default function LandingPage() {
               <div className="headerContainer">
                   <div className='headerDiv'>
                       <h1 className='headerDivTitle'>Reseña tus juegos favoritos</h1>
-                      <Link to='/login'>
+                      <Link to='/Juegos'>
                           <button className="botonLogin">Pruebalo ahora</button>
                       </Link>
                   </div>
