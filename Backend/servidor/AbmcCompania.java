@@ -559,7 +559,7 @@ public class AbmcCompania {
 		    
 		    ArrayList<Compania> listadeempresas = new ArrayList<>();
 		    
-		    listadeempresas = DataCompania.listaEmpresas();
+		    listadeempresas = DataCompania.listaCompanias();
 		    	
 			Gson gson = new Gson();
 		    String jsonRespuesta = gson.toJson(listadeempresas);

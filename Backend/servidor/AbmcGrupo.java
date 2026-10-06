@@ -39,15 +39,7 @@ import io.jsonwebtoken.security.Keys;
 
 public class AbmcGrupo {
 	private static final SecretKey KEY = GeneracionWebToken.llaveJWT();
-	//ABMC Grupo uso
-	
-	//AbmcGrupo.insertarNuevo("foto2.jpg", "IGN", "Grupo reconocitdo internacionalmente ");
-	//Grupo g = AbmcGrupo.recuperarPorId(1);
-	//LinkedList<Grupo> grupos = AbmcGrupo.recuperarTodos();
-	//ArrayList<Grupo> grupos = AbmcGrupo.recuperarPorNombre("IG");
 
-	
-	
 	public static class obtenergruporeseniador implements HttpHandler {
 		
 	    public void handle(HttpExchange exchange) throws IOException {
@@ -216,11 +208,7 @@ public class AbmcGrupo {
 			
 		    	
 		    }
-		
-		
-		
-		
-		
+				
 		
 	}
 	
@@ -278,13 +266,9 @@ public class AbmcGrupo {
 				else {
 					
 					respuesta = "error";
-			    	exchange.sendResponseHeaders(401, respuesta.getBytes().length);
-			    	
-					
-				}
-				
-		    	
-		    
+			    	exchange.sendResponseHeaders(401, respuesta.getBytes().length);				
+				}				
+	    
 		    }
 		    catch(Error e){
 		    	
@@ -292,27 +276,18 @@ public class AbmcGrupo {
 		    	exchange.sendResponseHeaders(401, respuesta.getBytes().length);
 		    	
 		    }
-		    
-		    	
-		    	
+		    	    	
 		    OutputStream os = exchange.getResponseBody();
             os.write(respuesta.getBytes(StandardCharsets.UTF_8));
             os.close();
 			
 		    	
 		    }
-		
-		
+			
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	
@@ -355,141 +330,35 @@ public class AbmcGrupo {
 		    	respuesta = "Error token";
 		    	
 		    	exchange.sendResponseHeaders(403, respuesta.getBytes().length);
-		    	return;
-		    	
+		    	return;    	
 		    }
-		    
-		    
+		        
 		    try {
 		    	
-		    	Gson gson = new Gson();
-		    	
-		    	grupos = DataGrupo.listargrupos();
-		    	
-		    	respuesta = gson.toJson(grupos);
-		    	
-		    	exchange.sendResponseHeaders(200, respuesta.getBytes().length);
-		    	
-				
+		    	Gson gson = new Gson();		    	
+		    	grupos = DataGrupo.listargrupos();	
+		    	respuesta = gson.toJson(grupos);		    	
+		    	exchange.sendResponseHeaders(200, respuesta.getBytes().length);			
    	
 		    }catch(Error e) {
 		    	
 		    	respuesta = "Error";
 		    	exchange.sendResponseHeaders(400, respuesta.getBytes().length);
-		    	return;
-		    	
+		    	return;	    	
 		    	
 		    }
 				
-
 		   
 		   OutputStream os = exchange.getResponseBody();
 	       os.write(respuesta.getBytes(StandardCharsets.UTF_8));
 	       os.close();
 		    
-		    
-				
-			
-			
-			
-			
-		}
-	}
-	
-	
-	
-	
-	
-	
-	
-	public static LinkedList<Grupo> recuperarTodos() {
-		LinkedList<Grupo> grupos = new LinkedList<>();
-		try {
-			// crear una conexión
-			Connection conn = Conexion.getInstancia().getConn();
-
-			// ejecutar la query
-            Statement stmt = conn.createStatement();
-            ResultSet rs= stmt.executeQuery("select * from grupo");
-
-            // mapear de resultset a objeto
-            while(rs.next()) {
-            	Grupo g=new Grupo();
-                g.setId(rs.getInt("idgrupo"));
-                g.setNombre(rs.getString("nombre"));
-                g.setFoto_perfil(rs.getString("foto_perfil"));
-                g.setDescripcion(rs.getString("descripcion"));
-
-                grupos.add(g);
-
-            }
-            //cerrar recursos
-            if(rs!=null){rs.close();}
-            if(stmt!=null){stmt.close();}
-
-		    conn.close();
-		    
-		    // mostrar info
-		    System.out.println("Listado Completo");
-		    System.out.println(grupos);
-		    System.out.println();System.out.println();
-		    
-		    
-		    
-
-		} catch (SQLException ex) {
-		    // Manejo de errores
-		    System.out.println("SQLException: " + ex.getMessage());
-		    System.out.println("SQLState: " + ex.getSQLState());
-		    System.out.println("VendorError: " + ex.getErrorCode());
-		}
-		return grupos;
 		
+		}
 	}
 	
-	public static Grupo recuperarPorId(int id) {		
-		Grupo g = null;
 
-		try {
-			// crear una conexión
-			Connection conn = Conexion.getInstancia().getConn();
 
-			// definir la query
-            PreparedStatement stmt = conn.prepareStatement("select * from grupo where idgrupo=?");
-            
-            // setear el/los parámetros
-            stmt.setInt(1, id);
-
-            
-
-            // ejecutar query y obtener resultados
-            ResultSet rs= stmt.executeQuery();
-
-            // mapear de resultset a objeto
-            if(rs.next()) {
-        		g=new Grupo();
-                g.setId(rs.getInt("idgrupo"));
-                g.setNombre(rs.getString("nombre"));
-            }
-            //cerrar recursos
-            if(rs!=null){rs.close();}
-            if(stmt!=null){stmt.close();}
-
-		    conn.close();
-		    
-		    // mostrar objeto
-		    System.out.println("Buscar por id");
-		    System.out.println(g);
-		    System.out.println();System.out.println();
-
-		} catch (SQLException ex) {
-		    // Manejo de errores
-		    System.out.println("SQLException: " + ex.getMessage());
-		    System.out.println("SQLState: " + ex.getSQLState());
-		    System.out.println("VendorError: " + ex.getErrorCode());
-		}
-		return g;
-	}
 	
 	public static class creargrupo implements HttpHandler {
 		@Override
@@ -513,7 +382,7 @@ public class AbmcGrupo {
 		    	
 		    	String authHeader = exchange.getRequestHeaders().getFirst("Authorization");
 		    	String token = authHeader.substring(7);
-		    	System.out.println("TOKEN EXTRAÍDO PARA REVISAR: [" + token + "]");
+		    	
 	    	    
 	    	    Claims claims = Jwts.parser()
 	    	    		.verifyWith(KEY) 
@@ -542,7 +411,7 @@ public class AbmcGrupo {
 				Gson gson = new Gson();
 				Grupo nuevoGrupo = gson.fromJson(body, Grupo.class);
 				boolean existe = false;
-				ArrayList<Grupo> gruposExistentes = AbmcGrupo.recuperarPorNombre(nuevoGrupo.getNombre());
+				ArrayList<Grupo> gruposExistentes = DataGrupo.recuperarGrupoPorNombre(nuevoGrupo.getNombre());
 				for (Grupo g : gruposExistentes) {
 				    if (g.getNombre().equalsIgnoreCase(nuevoGrupo.getNombre())) {
 				        existe = true;
@@ -671,52 +540,7 @@ public class AbmcGrupo {
 		}
 	}
 	
-	public static ArrayList<Grupo> recuperarPorNombre(String nombre) {		
-		ArrayList<Grupo> grupos = new ArrayList<>();
 
-		try {
-			// crear una conexión
-			Connection conn = Conexion.getInstancia().getConn();
-
-			// definir la query
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM grupo WHERE LOWER(nombre) LIKE LOWER(?)");
-            
-            // setear el/los parámetros
-            stmt.setString(1, "%"+nombre+"%");
-
-            
-
-            // ejecutar query y obtener resultados
-            ResultSet rs= stmt.executeQuery();
-
-            // mapear de resultset a objeto
-            while(rs.next()) {
-        		Grupo g=new Grupo();
-                g.setId(rs.getInt("idgrupo"));
-                g.setNombre(rs.getString("nombre"));
-                g.setDescripcion(rs.getString("descripcion"));
-                g.setFoto_perfil(rs.getString("foto_perfil"));
-                grupos.add(g);
-            }
-            //cerrar recursos
-            if(rs!=null){rs.close();}
-            if(stmt!=null){stmt.close();}
-
-		    
-		    // mostrar objeto
-		    System.out.println("Buscar por nombre");
-		    System.out.println(grupos);
-		    System.out.println();System.out.println();
-
-		} catch (SQLException ex) {
-		    // Manejo de errores
-		    System.out.println("SQLException: " + ex.getMessage());
-		    System.out.println("SQLState: " + ex.getSQLState());
-		    System.out.println("VendorError: " + ex.getErrorCode());
-		}
-		return grupos;
-	}
-	
 	
 	public static class aniadirMiembroAGrupo implements HttpHandler {
 		
@@ -769,8 +593,7 @@ public class AbmcGrupo {
 	    	    	
     	    		respuesta = "Bien";
 		    		exchange.sendResponseHeaders(200, respuesta.getBytes().length);
-	    	    	
-		    		
+	
 		    	}
 	    	    
 	    	    else {

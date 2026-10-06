@@ -340,7 +340,7 @@ public static  LinkedList<Compania> recuperarCompanias() {
 	
 }
 
-public static ArrayList<Compania> listaEmpresas() {
+public static ArrayList<Compania> listaCompanias() {
 	
 	   ArrayList<Compania> listadeempresas = new ArrayList<>();
 	
