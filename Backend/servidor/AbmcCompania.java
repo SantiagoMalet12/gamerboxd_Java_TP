@@ -39,10 +39,7 @@ public class AbmcCompania {
 	private static final SecretKey KEY = GeneracionWebToken.llaveJWT();
 	
 	
-		
 	
-		
-		
 	public static class actualizardatosdeempresa implements HttpHandler {
 		
 		
