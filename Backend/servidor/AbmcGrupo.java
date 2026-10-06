@@ -48,6 +48,62 @@ public class AbmcGrupo {
 
 	
 	
+	public static class obtenergruporeseniador implements HttpHandler {
+		
+	    public void handle(HttpExchange exchange) throws IOException {
+	        
+	        String respuestadb = "{\"error\":\"error\"}"; 
+	        
+	        Cors.controlCors(exchange);
+	        
+	        if (exchange.getRequestMethod().equals("OPTIONS")) {
+	            exchange.sendResponseHeaders(204, -1);
+	            exchange.close();
+	            return;
+	        }
+	         
+	        try {
+	            String authHeader = exchange.getRequestHeaders().getFirst("Authorization");	    	
+	            String token = authHeader.substring(7);
+
+	            Claims claims = Jwts.parser()
+	                    .verifyWith(KEY) 
+	                    .build()
+	                    .parseSignedClaims(token)
+	                    .getPayload();
+	            
+		    	InputStream is = exchange.getRequestBody();
+			    String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+			    is.close();
+			    Gson gson = new Gson();
+				Persona per = gson.fromJson(body, Persona.class);    	    
+	  
+	            try {
+	                String nombre = DataGrupo.nombregrupo(per.getMail());
+	                // Armamos el JSON que espera tu React (dataa.nombregrupo)
+	                respuestadb = "{\"nombregrupo\":\"" + nombre + "\"}";
+	                
+	                byte[] bytes = respuestadb.getBytes(StandardCharsets.UTF_8);
+	                exchange.getResponseHeaders().set("Content-Type", "application/json; charset=UTF-8");
+	                exchange.sendResponseHeaders(200, bytes.length);
+	            } catch(Exception e) {
+	                respuestadb = "{\"error\":\"error\"}";
+	                byte[] bytes = respuestadb.getBytes(StandardCharsets.UTF_8);
+	                exchange.sendResponseHeaders(500, bytes.length);
+	            }
+
+	        } catch(Exception e) {
+	            respuestadb = "{\"error\":\"unauthorized\"}";
+	            byte[] bytes = respuestadb.getBytes(StandardCharsets.UTF_8);
+	            exchange.sendResponseHeaders(401, bytes.length);
+	        }
+	        
+	        OutputStream os = exchange.getResponseBody();
+	        os.write(respuestadb.getBytes(StandardCharsets.UTF_8));
+	        os.close();
+	    }
+	}
+	
 	public static class actualizardatosgrupo implements HttpHandler {
 		
 		

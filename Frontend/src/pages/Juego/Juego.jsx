@@ -14,6 +14,7 @@ function JuegoResenia(){
 	const [usuario, setUsuario] = useState(null);
 	const [mostrarModalBorrar, setMostrarModalBorrar] = useState(false);
 	const [alerta, setAlerta] = useState(null);
+	const [nombregrupo, setNombreGrupo] = useState("");
 	const [usuarioLogueado, setUsuarioLogueado] = useState(()=>{
 		const token = localStorage.getItem('token');
 		return token ? token : null
@@ -97,6 +98,13 @@ function JuegoResenia(){
 	  useEffect(() => {
 		cargarResenias();
 	  }, [id]);
+	  
+	  
+
+	  
+
+	  
+	  	
 
 	  useEffect(() => {
 	  	if (usuarioLogueado) {
@@ -322,7 +330,9 @@ function JuegoResenia(){
 								  <strong>{r.usuario.nombre_usuario}</strong>
 								  
 								</div>
-								<p className='review-card-nombre-grupo'>Nombre de grupo </p> 
+								<p className='review-card-nombre-grupo'>
+								    {r.usuario?.nombre_grupo || "Sin grupo"}
+								</p>
 	
 								{esPropia && (
 									<div className="botones-accion-resenia">

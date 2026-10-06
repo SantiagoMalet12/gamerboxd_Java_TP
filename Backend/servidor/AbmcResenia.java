@@ -46,10 +46,15 @@ public class AbmcResenia {
 
 			// ejecutar la query
             Statement stmt = conn.createStatement();
-            String sql = "SELECT r.*, j.titulo AS nombre_juego, j.imagen AS foto_juego, p.nombre AS nombre_usuario " +
-				     "FROM resenia r " +
-				     "INNER JOIN juego j ON r.id_juego = j.idjuego " +
-				     "INNER JOIN persona p ON r.mail_usuario = p.mail";
+            String sql = "SELECT r.*, " +
+                    "j.titulo AS nombre_juego, " +
+                    "j.imagen AS foto_juego, " +
+                    "p.nombre AS nombre_usuario, " +
+                    "g.nombre AS nombre_grupo " +
+                    "FROM resenia r " +
+                    "INNER JOIN juego j ON r.id_juego = j.idjuego " +
+                    "INNER JOIN persona p ON r.mail_usuario = p.mail " +
+                    "LEFT JOIN grupo g ON p.idgrupo = g.idgrupo";
             ResultSet rs= stmt.executeQuery(sql);
 
             // mapear de resultset a objeto
@@ -74,7 +79,9 @@ public class AbmcResenia {
                 Persona p = new Persona();
                 p.setMail(rs.getString("mail_usuario"));
                 p.setNombre_usuario(rs.getString("nombre_usuario")); 
+                p.setNombre_grupo(rs.getString("nombre_grupo"));
                 r.setUsuario(p);
+                
                 resenias.add(r);
 
                
@@ -470,27 +477,19 @@ public class AbmcResenia {
 			// crear una conexión
 	
 			Connection conn = Conexion.getInstancia().getConn();
-	
-	
-	
+
 			// definir la query
 	
 			PreparedStatement stmt = conn.prepareStatement("select * from resenia where id_juego=?");
-	
-	
-	
+
 			// setear el/los parámetros
 	
 			stmt.setInt(1, id);
-	
-	
-	
+
 			// ejecutar query y obtener resultados
 	
 			ResultSet rs = stmt.executeQuery();
-	
-	
-	
+
 			// mapear cada fila del resultset a un objeto y agregarlo a la lista
 	
 			while (rs.next()) {
@@ -498,9 +497,7 @@ public class AbmcResenia {
 				Resenia r = new Resenia();
 				
 				Persona p = new Persona();
-				
-				
-		
+
 				r.setId_juego(rs.getInt("id_juego"));
 		
 				r.setFecha(rs.getString("fecha"));
@@ -521,25 +518,16 @@ public class AbmcResenia {
 		
 				lista.add(r);
 	
-			}
-	
-		
-		
+			}		
 				// cerrar recursos
 		
 				if (rs != null) { rs.close(); }
 		
 				if (stmt != null) { stmt.close(); }
 		
-				
-		
-		
-		
+
 				// mostrar objetos
 		
-				
-	
-	
 	
 			} catch (SQLException ex) {
 	

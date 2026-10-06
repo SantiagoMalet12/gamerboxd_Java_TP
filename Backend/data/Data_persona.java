@@ -297,7 +297,10 @@ public class Data_persona {
 	public static Persona buscar_solo_persona_pormail(String mail) {
 		
 		Persona per = new Persona();
-		String query = "select * from persona where mail = ?";
+		String query = "SELECT p.*, g.nombre AS nombre_grupo\r\n"
+				+ "FROM persona p\r\n"
+				+ "LEFT JOIN grupo g ON p.idgrupo = g.idgrupo\r\n"
+				+ "WHERE p.mail = ?";
 		Connection conn = Conexion.getInstancia().getConn();
 		
 		try {
@@ -315,6 +318,8 @@ public class Data_persona {
 		    	per.setIdgrupo(rs.getInt("idgrupo"));
 		    	per.setRolgrupo(rs.getString("rolgrupo"));
 		    	per.setEstado(rs.getString("estado"));
+		    	per.setNombre_grupo(rs.getString("nombre_grupo"));
+		    	
 		 
 	
 		    	per.setMail(mail);

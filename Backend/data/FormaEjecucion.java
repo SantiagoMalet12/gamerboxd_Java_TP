@@ -6,7 +6,7 @@ public class FormaEjecucion {
 	
 	public static boolean tipoejecucion() {
 		
-		Boolean tipo = true;
+		Boolean tipo = false;
 		
 		return tipo;
 		

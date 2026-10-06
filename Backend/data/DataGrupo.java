@@ -18,6 +18,43 @@ import entities.Propuesta;
 public class DataGrupo {
 	
 	
+	
+	
+public static String nombregrupo (String mail)	{
+	
+	String nombregrupo = "Sin grupo";
+	try {
+			
+		
+		Connection conn = Conexion.getInstancia().getConn();
+		String query = "SELECT g.nombre \r\n"
+				+ "FROM persona\r\n"
+				+ "INNER JOIN grupo g ON g.idgrupo = persona.idgrupo\r\n"
+				+ "WHERE persona.mail = ?";
+		PreparedStatement Resultado = conn.prepareStatement(query);
+		Resultado.setString(1, mail);
+		ResultSet rs = Resultado.executeQuery();
+		
+		if (rs.next()) {	
+			
+			nombregrupo = rs.getString("nombre");
+		}
+			
+		
+	}catch(SQLException ex) {
+		
+		System.out.println("SQLException: " + ex.getMessage());
+	    System.out.println("SQLState: " + ex.getSQLState());
+	    System.out.println("VendorError: " + ex.getErrorCode());
+		
+	}
+	
+	
+	return nombregrupo;
+}
+	
+
+	
 public static boolean existegrupo(String nombreJuego) {
 		
 		boolean resultado = false;

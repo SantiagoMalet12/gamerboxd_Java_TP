@@ -37,6 +37,7 @@ import servidor.AbmcJuegos.listajuegos;
 import servidor.AbmcEmpresa.listaempresas;
 import servidor.AbmcGrupo.creargrupo;
 import servidor.AbmcGrupo.listarGrupos;
+import servidor.AbmcGrupo.obtenergruporeseniador;
 import servidor.AbmcUsuario.actualizardatosusuario;
 import servidor.AbmcUsuario.verificarjwt;
 import java.io.IOException;
@@ -108,6 +109,7 @@ public class ServerHTTP {
 		server.createContext("/salirDeGrupo", new salirDeGrupo());
 		server.createContext("/dardebajagrupo", new dardebajagrupo());
 		server.createContext("/actualizardatosgrupo", new actualizardatosgrupo());
+		server.createContext("/obtenergruporeseniador", new obtenergruporeseniador());
 		
 
 		server.start();
