@@ -34,7 +34,7 @@ import servidor.AbmcJuegos.existejuego;
 import servidor.AbmcJuegos.juegoid;
 
 import servidor.AbmcJuegos.listajuegos;
-import servidor.AbmcEmpresa.listaempresas;
+import servidor.AbmcCompania.listaempresas;
 import servidor.AbmcGrupo.creargrupo;
 import servidor.AbmcGrupo.listarGrupos;
 import servidor.AbmcGrupo.obtenergruporeseniador;

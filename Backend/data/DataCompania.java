@@ -3,6 +3,7 @@ import java.sql.*;
 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -339,7 +340,43 @@ public static  LinkedList<Compania> recuperarCompanias() {
 	
 }
 
+public static ArrayList<Compania> listaEmpresas() {
+	
+	   ArrayList<Compania> listadeempresas = new ArrayList<>();
+	
+	try {
+		
+		Connection conn = Conexion.getInstancia().getConn();
 
+		String query = "select * from compania where estado <> ?";
+		PreparedStatement Resultado = conn.prepareStatement(query);
+		Resultado.setString(1, "inactivo");
+		ResultSet rs = Resultado.executeQuery();
+		
+		
+		while (rs.next()) {
+			
+			Compania compania = new Compania();
+			
+			compania.setId(rs.getInt("idcompania"));
+			compania.setNombre(rs.getString("nombre"));
+		
+			listadeempresas.add(compania);
+					
+		}
+		
+
+	}
+	catch(SQLException ex){	
+		
+		System.out.println("SQLException: " + ex.getMessage());
+	    System.out.println("SQLState: " + ex.getSQLState());
+	    System.out.println("VendorError: " + ex.getErrorCode());
+	}
+	
+	return listadeempresas;
+	
+}
 
 
 }

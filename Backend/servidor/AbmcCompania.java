@@ -19,6 +19,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import javax.crypto.SecretKey;
@@ -533,8 +534,6 @@ public class AbmcCompania {
 	
 	
 	
-	
-	
 	public static LinkedList<Compania> recuperarTodos() {
 		LinkedList<Compania> companias = new LinkedList<>();
 		
@@ -543,7 +542,41 @@ public class AbmcCompania {
 		return companias;
 	}
 	
+	
+	public static class listaempresas implements HttpHandler {
+		
+		public void handle(HttpExchange exchange) throws IOException {
+			
+			Cors.controlCors(exchange);
+			
+		    if (exchange.getRequestMethod().equals("OPTIONS")) {
 
+		        exchange.sendResponseHeaders(204, -1);
+		        exchange.close();
+
+		        return;
+		    }
+		    
+		    ArrayList<Compania> listadeempresas = new ArrayList<>();
+		    
+		    listadeempresas = DataCompania.listaEmpresas();
+		    	
+			Gson gson = new Gson();
+		    String jsonRespuesta = gson.toJson(listadeempresas);
+		    
+		    
+		    byte[] bytesRespuesta = jsonRespuesta.getBytes("UTF-8");
+		    exchange.sendResponseHeaders(200, bytesRespuesta.length);
+		    
+		    
+		    OutputStream os = exchange.getResponseBody();
+		    os.write(bytesRespuesta);
+		    os.close();
+		    
+		    
+		}
+		}
+	
 	
 
 }
