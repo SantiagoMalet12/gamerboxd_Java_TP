@@ -319,10 +319,13 @@ function JuegoResenia(){
 								          src={r.usuario.foto_perfil || `https://picsum.photos/200`} 
 								          className="user-avatar" 
 								        />
-								  <strong>{r.usuario.nombre_usuario}</strong>
-								  
+										<div className="user-text-info">
+						                    <strong>{r.usuario.nombre_usuario}</strong>
+						                    <span className="user-group">
+						                        Nombre grupo
+						                    </span>
+						                </div>
 								</div>
-								<p className='review-card-nombre-grupo'>Nombre de grupo </p> 
 	
 								{esPropia && (
 									<div className="botones-accion-resenia">
@@ -350,8 +353,8 @@ function JuegoResenia(){
 						            />
 						        )}
 			          </div>
-			        );
-		        })}
+			        ); })}
+		        
 		      </section>
 			  </div>
 			  
