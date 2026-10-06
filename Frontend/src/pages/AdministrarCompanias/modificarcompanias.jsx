@@ -8,6 +8,10 @@ import './modificarcompanias.css'
 
 function Modificarcompanias(){
 	
+	
+	
+	
+	
 	const navigate = useNavigate();
 	const location = useLocation();
 	const nombreEmpresaOriginal = location.state?.nombre || "";
@@ -17,11 +21,17 @@ function Modificarcompanias(){
 	const [id, setid] = useState("");
 	
 	const [empresaconfirmada, setempresaconfirmada] = useState(nombreEmpresaOriginal);
-	const [estadoconfirmado, setestadoconfirmado] = useState(""); 
+	const [estadoconfirmado, setestadoconfirmado] = useState("");
+	
 
     const [alerta, setAlerta] = useState(null);
 	
 	let token = localStorage.getItem('token');
+	
+	
+	
+	
+	
 	
 	const volver = () => {
 		navigate("/AdministrarCompanias");

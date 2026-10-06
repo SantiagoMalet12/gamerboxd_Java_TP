@@ -1,7 +1,9 @@
 package data;
 import java.sql.*;
 
+
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.Random;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -298,6 +300,45 @@ public static String  crearcompania(String nombre) throws SQLException{
 	return Respuesta;
 		
 }
+
+
+public static  LinkedList<Compania> recuperarCompanias() {
+	
+	LinkedList<Compania> companias = new LinkedList<>();
+	
+	try {
+	
+		Connection conn = Conexion.getInstancia().getConn();
+
+        Statement stmt = conn.createStatement();
+        ResultSet rs= stmt.executeQuery("select * from compania");
+
+        while(rs.next()) {
+        	Compania c=new Compania();
+            c.setId(rs.getInt("idcompania"));
+            c.setNombre(rs.getString("nombre"));
+
+            companias.add(c);
+
+        }
+
+        if(rs!=null){rs.close();}
+        if(stmt!=null){stmt.close();}
+
+	    conn.close();
+	    
+	    
+
+	} catch (SQLException ex) {
+	    // Manejo de errores
+	    System.out.println("SQLException: " + ex.getMessage());
+	    System.out.println("SQLState: " + ex.getSQLState());
+	    System.out.println("VendorError: " + ex.getErrorCode());
+	}
+	return companias;
+	
+}
+
 
 
 
