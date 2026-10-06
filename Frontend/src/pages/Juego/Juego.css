@@ -34,10 +34,21 @@
     box-shadow: 0 10px 20px rgba(0,0,0,0.5);
 }
 
+.user-text-info{
+	 display: 'flex';
+	 flex-direction: 'column' ;
+}
+
 .game-header h1 {
     font-size: 2.5rem;
     margin: 0 0 1rem 0;
     color: var(--color6);
+}
+
+.user-group{
+	font-size: '0.85em'; 
+	color: '#a0a0a0';
+	margin-top: '0rem'
 }
 
 .game-header p {
@@ -72,6 +83,17 @@
 
 }
 
+.juego-alerta-wrapper {
+    width: 50%;
+    max-width: 450px;
+    margin: 0 auto 4vh auto;
+    display: flex;
+    justify-content: center;
+}
+
+.juego-alerta-wrapper > div {
+    margin: 0 auto;
+}
 
 .user-avatar {
   width: 40px; 
@@ -84,7 +106,7 @@
 .review-card strong {
     color: var(--color5);
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0rem;
 }
 
 .reviews-section {

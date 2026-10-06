@@ -233,7 +233,15 @@ function JuegoResenia(){
 					<img src={juego.background_image}/>
 				</div>
 		      </header>
-	
+			  {alerta && (
+			              <div classname="juego-alerta-wrapper">
+			                  <AlertMessage 
+			                      tipo={alerta.tipo} 
+			                      mensaje={alerta.mensaje} 
+			                      onClose={() => setAlerta(null)} 
+			                  />
+			              </div>
+			          )}
 		      <section className="reviews-section">
 			  
 
@@ -305,13 +313,7 @@ function JuegoResenia(){
 		        						<button type="button" className="btn-secundario" onClick={() => setEditando(false)}>Cancelar</button>
 		        					</div>
 		        				</form>
-								{alerta && (
-					                <AlertMessage 
-					                    tipo={alerta.tipo} 
-					                    mensaje={alerta.mensaje} 
-					                    onClose={() => setAlerta(null)} 
-					                />
-					            )}
+								
 		        			</div>
 							
 							
@@ -327,12 +329,14 @@ function JuegoResenia(){
 								          src={r.usuario.foto_perfil || `https://picsum.photos/200`} 
 								          className="user-avatar" 
 								        />
-								  <strong>{r.usuario.nombre_usuario}</strong>
-								  
+										<div className="user-text-info">
+										    <strong>{r.usuario?.nombre_usuario}</strong>
+										    <span className="user-group">
+										        {r.usuario?.nombre_grupo || "Sin grupo"}
+										    </span>
+										</div>
 								</div>
-								<p className='review-card-nombre-grupo'>
-								    {r.usuario?.nombre_grupo || "Sin grupo"}
-								</p>
+
 	
 								{esPropia && (
 									<div className="botones-accion-resenia">
@@ -352,16 +356,10 @@ function JuegoResenia(){
 			            <p>{r.descripcion}</p>
 			            <span className="puntaje-badge">Puntaje: {r.puntaje}/5</span>
 						
-						{esPropia && alerta && (
-						            <AlertMessage 
-						                tipo={alerta.tipo} 
-						                mensaje={alerta.mensaje} 
-						                onClose={() => setAlerta(null)} 
-						            />
-						        )}
+						
 			          </div>
-			        );
-		        })}
+			        ); })}
+		        
 		      </section>
 			  </div>
 			  

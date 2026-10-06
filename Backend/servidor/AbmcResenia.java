@@ -182,7 +182,7 @@ public class AbmcResenia {
 	           
 	                
 	            }else {
-	            	if (Moderacion.contienePalabrasProhibidas(reseniaRecibida.getDescripcion()).isEmpty() == false || Moderacion.contienePalabrasProhibidas(reseniaRecibida.getTitulo()).isEmpty()==false) {
+	            	if (Moderacion.contienePalabrasProhibidas(reseniaRecibida.getDescripcion().toLowerCase()).isEmpty() == false || Moderacion.contienePalabrasProhibidas(reseniaRecibida.getTitulo().toLowerCase()).isEmpty()==false) {
 	            		String error = "La reseña contiene palabras prohibidas";
 	            		exchange.getResponseHeaders().set("Content-Type", "text/plain; charset=UTF-8");
 	                    exchange.sendResponseHeaders(400, error.getBytes().length);
@@ -337,7 +337,7 @@ public class AbmcResenia {
     	    String jsonBody = new String(is.readAllBytes(), StandardCharsets.UTF_8);
 	        Resenia nuevaResenia = gson.fromJson(jsonBody, Resenia.class);
 	        nuevaResenia.setMail_usuario(mail);
-	        if (Moderacion.contienePalabrasProhibidas(nuevaResenia.getDescripcion()).isEmpty() == false|| Moderacion.contienePalabrasProhibidas(nuevaResenia.getTitulo()).isEmpty() == false) {
+	        if (Moderacion.contienePalabrasProhibidas(nuevaResenia.getDescripcion().toLowerCase()).isEmpty() == false|| Moderacion.contienePalabrasProhibidas(nuevaResenia.getTitulo().toLowerCase()).isEmpty() == false) {
 	                
 	                String error = "La reseña contiene palabras prohibidas.";
 	                exchange.getResponseHeaders().set("Content-Type", "text/plain; charset=UTF-8");
