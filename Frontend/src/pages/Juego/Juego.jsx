@@ -345,14 +345,9 @@ function JuegoResenia(){
 			            <p>{r.descripcion}</p>
 			            <span className="puntaje-badge">Puntaje: {r.puntaje}/5</span>
 						
-						{esPropia && alerta && (
-						            <AlertMessage 
-						                tipo={alerta.tipo} 
-						                mensaje={alerta.mensaje} 
-						                onClose={() => setAlerta(null)} 
-						            />
-						        )}
+						
 			          </div>
+					  
 			        ); })}
 		        
 		      </section>
