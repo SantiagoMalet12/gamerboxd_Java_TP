@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
 import { useNavigate } from "react-router-dom"; 
 import { API_URL } from '../../config';
 import Footer from '../../components/Footer/Footer';
@@ -9,13 +10,45 @@ import './companias.css'
 function AdministrarCompanias(){
 	
 	const navigate = useNavigate();
-	
+	const [companias, setCompanias] = useState([]);
+	const [filtradas, setFiltradas] = useState([]);
+	const [mostrarFiltradas, setMostrarFiltradas] = useState(false);
 	const [nombrecompania, setnombrecompania] = useState("");
     const [alerta, setAlerta] = useState(null);
 	
+	useEffect(() => {
+	        fetch(`${API_URL}/listaempresas`) 
+	            .then(res => res.json())
+	            .then(data => setCompanias(data))
+	            .catch(err => console.error("Error al traer compañías", err));
+	    }, []);
+		
+	
+	
+	const seleccionarFiltrada = (nombrecompania) => {
+	        setnombrecompania(nombrecompania);
+	        setMostrarFiltradas(false);
+	    };
+	
+	
+	
 	const manejarnombrecompania = (e) => {
-		setnombrecompania(e.target.value)
-	};
+			const valor = e.target.value;
+			setnombrecompania(valor);
+	        
+	        if (valor.length > 0) {
+	           
+	            const filtradas = companias.filter(comp => 
+	                comp.name.toLowerCase().includes(valor.toLowerCase())
+	            );
+	            setFiltradas(filtradas);
+	            setMostrarFiltradas(true); 
+	        } else {
+	            
+	            setFiltradas([]);
+	            setMostrarFiltradas(false);
+	        }
+		};
 	
 	const modificarcompania = (e) => {
 		e.preventDefault();
@@ -134,7 +167,21 @@ function AdministrarCompanias(){
                                 value={nombrecompania}
                                 onChange={manejarnombrecompania}
                                 required
+								
                             />
+							{mostrarFiltradas && filtradas.length > 0 && (
+                                <ul className="sugerencias-lista">
+                                    {filtradas.map((comp, index) => (
+                                        <li 
+                                            key={index} 
+                                            onClick={() => seleccionarFiltrada(comp.name)}
+                                            className="sugerencia-item"
+                                        >
+                                            {comp.name}
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </div>
                         
                         <div className="companias-acciones">
@@ -145,17 +192,17 @@ function AdministrarCompanias(){
                     </form>
                 </div>
 				{alerta !== null && (
-								<div className={`companias-alerta-wrapper ${alerta ? 'visible' : ''}`}>
-								                    
-								                    {alerta && (
-								                        <AlertMessage 
-								                            tipo={alerta.tipo} 
-								                            mensaje={alerta.mensaje} 
-								                            onClose={() => setAlerta(null)} 
-								                        />
-								                    )}
-								                </div>
-							            )}
+					<div className={`companias-alerta-wrapper ${alerta ? 'visible' : ''}`}>
+					                    
+			                    {alerta && (
+			                        <AlertMessage 
+			                            tipo={alerta.tipo} 
+			                            mensaje={alerta.mensaje} 
+			                            onClose={() => setAlerta(null)} 
+			                        />
+			                    )}
+			                </div>
+				            )}
             </div>
 
             <Footer />

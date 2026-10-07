@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { API_URL } from '../../config';
 import Footer from '../../components/Footer/Footer';
 import AlertMessage from '../../components/AlertMessage/AlertMessage';
@@ -11,10 +11,38 @@ function MenuPropuestas(){
 	
 	const [nombrejuego, setnombrejuego] = useState("");
     const [alerta, setAlerta] = useState(null);
+	const [juegos, setJuegos] = useState([]);
+    const [filtrados, setFiltrados] = useState([]);
+    const [mostrarFiltrados, setMostrarFiltrados] = useState(false);
+	
+	useEffect(() => {
+	        fetch(`${API_URL}/listajuegos`)
+	            .then(res => res.json())
+	            .then(data => setJuegos(data))
+	            .catch(err => console.error("Error al traer juegos", err));
+	    }, []);
 		
-    const manejarnombrejuego = (e) => {
-        setnombrejuego(e.target.value);
-    };
+		const manejarnombrejuego = (e) => {
+		        const valor = e.target.value;
+		        setnombrejuego(valor);
+		        
+		        if (valor.length > 0) {
+		           
+		            const juegosFiltrados = juegos.filter(juego => 
+		                juego.name.toLowerCase().includes(valor.toLowerCase())
+		            );
+		            setFiltrados(juegosFiltrados);
+		            setMostrarFiltrados(true); 
+		        } else {
+		            setFiltrados([]);
+		            setMostrarFiltrados(false);
+		        }
+		    };
+			
+	const seleccionarFiltrado = (nombre) => {
+	        setnombrejuego(nombre);
+	        setMostrarFiltrados(false);
+	    };
 		
 	const verpropuestas = () => {
 		navigate("/Propuestas");
@@ -88,6 +116,19 @@ function MenuPropuestas(){
                                 value={nombrejuego}
                                 onChange={manejarnombrejuego}
                             /> 
+							{mostrarFiltrados && filtrados.length > 0 && (
+                                <ul className="sugerencias-lista">
+                                    {filtrados.map((juego, index) => (
+                                        <li 
+                                            key={index} 
+                                            onClick={() => seleccionarFiltrado(juego.name)}
+                                            className="sugerencia-item"
+                                        >
+                                            {juego.name}
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </div>
                         
                         <div className="menu-propuestas-acciones">
