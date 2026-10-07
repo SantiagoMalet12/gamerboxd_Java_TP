@@ -1,90 +1,95 @@
 import { useState } from 'react';
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom"; // Se recomienda usar react-router-dom
 import './crearGrupo.css'
 import '../../styles.css'
 import FooterC from '../../components/Footer/Footer'
+import AlertMessage from '../../components/AlertMessage/AlertMessage'; // Importamos el componente
 import { API_URL } from '../../config';
 
 export default function CrearGrupo(){
 	const token = localStorage.getItem('token');
-	
 	const navigate = useNavigate();
 	
 	const [formData, setFormData] = useState({
 	    nombre: '',
 	    descripcion: ''
-	  });
+	});
 	  
-	  const [imagen, setimagen] = useState("")
+	const [imagen, setimagen] = useState("");
+	const [fotoPreview, setFotoPreview] = useState(null);
+	const [alerta, setAlerta] = useState(null);
 	  
-	  
-	  const insertarimagen = (e) => {
-		
-		
+	const insertarimagen = (e) => {
 		const file = e.target.files[0];
 		    
-		    if (file) {
-		        
-		        setFotoPreview(URL.createObjectURL(file));
+		if (file) {
+		    setFotoPreview(URL.createObjectURL(file));
 		       
-		        let reader = new FileReader();
-		        reader.readAsDataURL(file);
-		        reader.onload = () => {
-		            setimagen(reader.result);
-		        };
-		    }
-	  }
+		    let reader = new FileReader();
+		    reader.readAsDataURL(file);
+		    reader.onload = () => {
+		        setimagen(reader.result);
+		    };
+		}
+	}
 
-	  
-	  const [fotoPreview, setFotoPreview] = useState(null);
-	  
-
-
-	  const handleChange = (e) => {
+	const handleChange = (e) => {
 	    const { name, value } = e.target;
 	    setFormData({
 	      ...formData,
 	      [name]: value
 	    });
-		
-	  };
+	};
 
-	  const handleSubmit = async (e) => {
+	const handleSubmit = async (e) => {
 	    e.preventDefault();
 
 	    try {
-	      const response = await fetch(`${API_URL}/creargrupo`, {
-	        method: 'POST',
-	        headers: {
-	          'Content-Type': 'application/json',
-			  'Authorization': token ? `Bearer ${token}` : ''
-	        },
-	        body: JSON.stringify({
-	          nombre: formData.nombre,
-	          descripcion: formData.descripcion,
-			  foto_perfil: imagen
+	        const response = await fetch(`${API_URL}/creargrupo`, {
+	            method: 'POST',
+	            headers: {
+	                'Content-Type': 'application/json',
+			        'Authorization': token ? `Bearer ${token}` : ''
+	            },
+	            body: JSON.stringify({
+	                nombre: formData.nombre,
+	                descripcion: formData.descripcion,
+			        foto_perfil: imagen
+	            }),
+	        });
 
-	        }),
-	      });
-
-	      if (response.ok) {
-	        setFormData({ nombre: '', descripcion: '' });
-			alert('bien'); 
-			setFotoPreview(null)
-			navigate("/")
-	      } else {
-			const errorData = await response.json();
-			console.log(errorData);
-			alert(errorData.mensaje);
-	      }
+	        if (response.ok) {
+	            setFormData({ nombre: '', descripcion: '' });
+			    setFotoPreview(null);
+			    setAlerta({ tipo: 'ok', mensaje: 'Grupo creado exitosamente.' });
+			    setTimeout(() => {
+			        navigate("/");
+			    }, 4000);
+			    
+	        } else {
+			    const errorData = await response.json();
+			    console.log(errorData);
+			    setAlerta({ tipo: 'error', mensaje: 'Error al crear el grupo.' });
+			    setTimeout(() => setAlerta(null), 4000);
+	        }
 	    } catch (error) {
-	      console.error('fcallo', error);
+	        console.error('fallo', error);
+	        setAlerta({ tipo: 'error', mensaje: 'Error de conexión con el servidor.' });
+	        setTimeout(() => setAlerta(null), 4000);
 	    }
-	  };
+	};
 		
-	  
-	  return (
+	return (
 		<section className="crearGrupoBody">
+		{alerta !== null && (
+								      <div style={{ margin: '5rem auto -4rem auto', width: '30%' }}>
+								          <AlertMessage 
+								              tipo={alerta.tipo} 
+								              mensaje={alerta.mensaje} 
+								              onClose={() => setAlerta(null)} 
+								          />
+								      </div>
+								  )}
 			<header className="crearGrupoHeader">
 		    <div className="form-container">
 		      <h2 className="form-title">Creacion de grupo</h2>
@@ -93,7 +98,7 @@ export default function CrearGrupo(){
 			  	<div className="avatar-upload-container">
 			            <label htmlFor="foto" className="avatar-preview-circle">
 			              {fotoPreview ? (
-			                <img src={fotoPreview} className="avatar-image" />
+			                <img src={fotoPreview} className="avatar-image" alt="Preview"/>
 			              ) : (
 			                <div className="avatar-placeholder">
 			                  <svg viewBox="0 0 24 24" fill="currentColor">
@@ -142,7 +147,11 @@ export default function CrearGrupo(){
 		        <button type="submit" className="submit-btn">Crear Grupo</button>
 		      </form>
 			
+			  
+			  
+			
 		    </div>
+			
 			</header>
 		
 			<section className="footer">
@@ -150,10 +159,5 @@ export default function CrearGrupo(){
 			</section>
 			
 		</section>
-		
-		
-		
-	  );
-	};
-	
-	
+	);
+};

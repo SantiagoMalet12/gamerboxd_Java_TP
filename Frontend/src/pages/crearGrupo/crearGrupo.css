@@ -11,7 +11,7 @@
 
 
 .form-container {
-  margin: 0rem auto;
+  margin: 4rem auto;
   padding: 2.5rem;
  
   background-color: rgba(255, 255, 255, 10%); 
@@ -23,9 +23,16 @@
   width:30%
 }
 
+.alerta-wrapper{
+	margin-Top: '20px';
+	width: '10px';
+	display: 'flex';
+	justify-content: 'center'; 
+}
+
 .crearGrupoHeader{
 	height:100%;
-	padding:15vh 0;
+	padding:5vh 0 10vh;
 	width:100%
 }
 
