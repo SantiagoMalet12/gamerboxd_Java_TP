@@ -34,7 +34,7 @@ public class AbmcJuegos {
 	
 	
 	
-	public static class juegoid implements HttpHandler {
+	public static class juegoid implements HttpHandler { 
 
 	    public void handle(HttpExchange exchange) throws IOException {
 	        Cors.controlCors(exchange);
@@ -71,7 +71,7 @@ public class AbmcJuegos {
 	            codigoestado = 500;
 	        }
 
-	        // 3. Enviar respuesta (directo el string en bytes, SIN llamar a gson.toJson otra vez)
+	     
 	        byte[] bytesRespuesta = respuesta.getBytes(StandardCharsets.UTF_8);
 	        exchange.getResponseHeaders().set("Content-Type", "application/json; charset=UTF-8");
 	        exchange.sendResponseHeaders(codigoestado, bytesRespuesta.length);
