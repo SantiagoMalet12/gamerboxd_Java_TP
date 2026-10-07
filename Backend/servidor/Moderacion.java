@@ -12,7 +12,7 @@ public class Moderacion {
 		    "verga", "joder", "coño", "maricon", "mamada", "mamon", "chingar","nigger","pija",
 		    "concha", "boludo", "boluda", "tarado", "tarada",
 		    "retrasado", "retrasada", "mogolico", "mogolica", 
-		    "suicidate", "invalido", "invalida","conchudo","conchuda",
+		    "suicidate", "invalido", "invalida","conchudo","conchuda", "pija",
 		    "free-skins"));
 		    
 
