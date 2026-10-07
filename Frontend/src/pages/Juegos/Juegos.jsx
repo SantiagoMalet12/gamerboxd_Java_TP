@@ -11,141 +11,110 @@ import Footer from '../../components/Footer/Footer'
 
 function Juegos(){
 	
-	const [listaJuegos, setListaJuegos] = useState([])
-	
-	const [listaEmpresas, setListaEmpresas] = useState([])
-	
-	
+	const [listaJuegos, setListaJuegos] = useState([]);
+	const [listaEmpresas, setListaEmpresas] = useState([]);
+	const [cargando, setCargando] = useState(true);
 	
 	useEffect(() => {
-		
 	  fetch(`${API_URL}/listaempresas`)
-	  
 	    .then((Response) => Response.json())
 	    .then((dataa) => {
 		  const nuevoarray = dataa.map(empresa => ({
-		  	
 		  	value: empresa.id,
 		  	label: empresa.name
-		  		
 		  }));
-		  
 		  const opcionPorDefecto = { value: '', label: 'Todos' };
-		  setListaEmpresas( [opcionPorDefecto, ...nuevoarray]);
-		  
-	      
+		  setListaEmpresas([opcionPorDefecto, ...nuevoarray]);
 	    })
 	    .catch((error) => console.error("Error cargando empresas:", error));
 	}, []);
 	
 	useEffect(() =>{
-		
 		fetch(`${API_URL}/listajuegos`)
 		.then((response) => response.json())
 		.then((data) => {
-		       
 		        setListaJuegos(data);
+		        setCargando(false); 
 		    })
-			
-			.catch((error) => console.error("Error cargando juegos:", error));
-		
+		.catch((error) => {
+            console.error("Error cargando juegos:", error);
+            setCargando(false); 
+        });
 	}, [])
 	
-	//usestate para saber en base a que compania hacer el filtro 
-		const [companiaelegida, seleccionarcompaniaelegida] = useState('Todos');
+	const [companiaelegida, seleccionarcompaniaelegida] = useState('Todos');
 	
 	const manejarCambioOpcion = (event) => {
-		
-		
-		seleccionarcompaniaelegida(event.label)
+		seleccionarcompaniaelegida(event.label);
 	}
 	
-
-
-	const juegosnorepetidos = []
-	const juegosExistente = []
 	
-	for (let i = 0; i<listaJuegos.length; i++){
-		
-		if(!juegosExistente.includes(listaJuegos[i].name)) {
-			juegosExistente.unshift(listaJuegos[i].name)
-			juegosnorepetidos.unshift(listaJuegos[i])
-		
-	}
-	}
-	
-	const [busqueda, setBusqueda] = useState('');
+	const [inputTexto, setInputTexto] = useState(''); 
+	const [busqueda, setBusqueda] = useState('');    
 
 	const manejarCambioBusqueda = (event) => {
-	    setBusqueda(event.target.value);
-
+	    setInputTexto(event.target.value);
 	};
 	
+// aca retraso la busqueda
+	useEffect(() => {
+        const temporizador = setTimeout(() => {
+            setBusqueda(inputTexto);
+        }, 500); 
+        return () => clearTimeout(temporizador);
+    }, [inputTexto]);
 
-	
-	
-	
-	var array_filtro = [];
+	const array_filtro = listaJuegos.filter(juego => {
+        const cumpleCompania = (companiaelegida === "Todos") || 
+                               (juego.developers && juego.developers.includes(companiaelegida));
+        
+        const nombreJuego = juego.name ? juego.name.toLowerCase() : "";
+        const cumpleInput = (busqueda.trim() === "") || 
+                            (nombreJuego.includes(busqueda.toLowerCase()));
 
-	for (let i = 0; i < listaJuegos.length; i++) {
-	  const juego = listaJuegos[i];
-
-	  
-	  const cumpleCompania = (companiaelegida === "Todos") || 
-	                         (juego.developers && juego.developers.includes(companiaelegida));
-
-	 
-	  const nombreJuego = juego.name ? juego.name.toLowerCase() : "";
-	  const cumpleInput = (busqueda.trim() === "") || 
-	                      (nombreJuego.includes(busqueda.toLowerCase()));
-
-	  // El juego entra a la lista soloo si cumple ambas cosas a la vez
-	  if (cumpleCompania && cumpleInput) {
-	    array_filtro.push(juego);
-	  }
-	}
-	
-	
-
-
-	
+        return cumpleCompania && cumpleInput;
+    });
 	
 	return(
 		<section>
 		<div className='juegosbody'>
 			<div>
-			<p className="titulo"> ¡Elige tu juego a reseñar! </p>
+			    <p className="titulo"> ¡Elige tu juego a reseñar! </p>
 			</div>
 			
 			<div className="filtros">
-			<h3 className='texto'>Buscar juego</h3>
-			<input onChange={manejarCambioBusqueda} />
+			    <h3 className='texto'>Buscar juego</h3>
+			    <input value={inputTexto} onChange={manejarCambioBusqueda} placeholder="Escribe para buscar..." />
 			
-			<div className="select">
-			<h3 className='texto'>Filtrar por compañia</h3>
-			    <Select
-			      defaultValue={{ value: 1, label: 'Todos' }}
-			      options={listaEmpresas}
-			      onChange={manejarCambioOpcion}
-			    />
-			  </div>
-			<div className="catalogo-juegos">
-			{array_filtro.map((juego) => (
-				<Link key={juego.id} to={`/juego/${juego.id}`}>
-			          <GameCard         
-			            titulo={juego.name}   
-			            imagen={juego.background_image}   
-			          />
-				</Link>
-			        ))}
-			      </div>
-	
+			    <div className="select">
+			        <h3 className='texto'>Filtrar por compañia</h3>
+			        <Select
+			            defaultValue={{ value: 1, label: 'Todos' }}
+			            options={listaEmpresas}
+			            onChange={manejarCambioOpcion}
+			        />
+			    </div>
+			  
+                {cargando ? (
+                    <div className="cargando"style={{ padding: '50px', textAlign: 'center', color: '#b0b0c0', transition:'2s' }}>
+                        <h2>Cargando juegos, por favor espera...</h2>
+                    </div>
+                ) : (
+                    <div className="catalogo-juegos cargando">
+                        {array_filtro.map((juego) => (
+                            <Link key={juego.id} to={`/juego/${juego.id}`}>
+                                <GameCard         
+                                    titulo={juego.name}   
+                                    imagen={juego.background_image}   
+                                />
+                            </Link>
+                        ))}
+                    </div>
+                )}
 			</div>
-		
 		</div>
 		<Footer/>
 		</section>
-		
 	)	
 }
 

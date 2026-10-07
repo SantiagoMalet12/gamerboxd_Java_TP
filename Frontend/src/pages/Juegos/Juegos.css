@@ -73,8 +73,19 @@
 	width: 100%;
   max-width: 300px; 
   margin-bottom: 20px; 
- 
-  
-  
-  
+}
+
+.cargando {
+    animation: aparecerSuave 1.3s ease-out forwards;
+}
+
+@keyframes aparecerSuave {
+    0% {
+        opacity: 0;
+        transform: translateY(15px); }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
 }
