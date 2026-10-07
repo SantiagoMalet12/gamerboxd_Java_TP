@@ -6,6 +6,8 @@ import AlertMessage from '../../components/AlertMessage/AlertMessage';
 import { API_URL } from '../../config';
 
 
+let tokenActual = localStorage.getItem('token');
+
 function JuegoResenia(){
 
 	const { id } = useParams(); 
@@ -78,13 +80,35 @@ function JuegoResenia(){
 	};
 
 	useEffect(() => {
+	  const cargarJuego = async () => {
+		
+	    try {
+	      const res = await fetch(`${API_URL}/juego/`, {
+	        method: "POST",
+	        headers: {
+	          'Content-Type': 'application/json',
+	        },
+	        body: JSON.stringify({
+	          id: id,
+	        }),
+	      });
 
+	      if (res.ok) {
+	        const data = await res.json();
+	        setJuego(data);
+			console.log(data)
+	      } else {
+	        console.error("Error en la respuesta del servidor:", res.status);
+	      }
+	    } catch (error) {
+	      console.error("Error de red:", error);
+	    }
+	  };
 
-	    fetch(`${API_URL}/juego/${id}`)
-	      .then(res => res.json())
-	      .then(data => setJuego(data))
-	      .catch(err => console.error(err));
-	  }, [id]);
+	  cargarJuego();
+	}, [id]);
+	  
+	  
 
 	  const cargarResenias = () => {
 		fetch(`${API_URL}/reseniasPorJuego?id=${id}`, {

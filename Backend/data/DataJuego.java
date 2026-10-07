@@ -3,6 +3,7 @@ package data;
 import java.util.ArrayList;
 
 
+
 import org.mindrot.jbcrypt.BCrypt;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -211,7 +212,100 @@ public static String actualizarJuego(int idJuego, String nuevoTitulo, String est
 }
 
 
+public static ArrayList<Juego> listarJuegos() {
+	
+	ArrayList<Juego> listadejuegos = new ArrayList<>();
+	
+	try {
+		
+		Connection conn = Conexion.getInstancia().getConn();
 
+		String query = "SELECT juego.idjuego, juego.titulo, juego.imagen, juego.descripcion, "
+	             + "       GROUP_CONCAT(compania.nombre SEPARATOR ', ') AS todas_las_companias "
+	             + "FROM juego "
+	             + "INNER JOIN juego_compania ON juego_compania.idjuego = juego.idjuego "
+	             + "INNER JOIN compania ON juego_compania.id_comp = compania.idcompania "
+	             + "WHERE LOWER(juego.estado) = ? "
+	             + "  AND LOWER(compania.estado) = ? "
+	             + "GROUP BY juego.idjuego;";
 
+	PreparedStatement resultado = conn.prepareStatement(query);
+	resultado.setString(1, "activo");
+	resultado.setString(2, "activo");
+	ResultSet rs = resultado.executeQuery();
+		
+		
+		while (rs.next()) {
+			
+			Juego juego = new Juego();
+			
+			juego.setId_juego(rs.getString("idjuego"));
+			juego.setTitulo(rs.getString("titulo"));
+			juego.setImagen(rs.getString("imagen"));
+			juego.setDescripcion(rs.getString("descripcion"));
+			juego.setCompanias(rs.getString("todas_las_companias"));
+			// agregar precio y genero y puntaje promedio
+			
+			listadejuegos.add(juego);
+			
+			
+		}
+		
+		
+
+	}
+	
+	
+	catch(SQLException ex){
+		
+		
+		System.out.println("SQLException: " + ex.getMessage());
+	    System.out.println("SQLState: " + ex.getSQLState());
+	    System.out.println("VendorError: " + ex.getErrorCode());
+	}
+	
+	return listadejuegos;
 }
 
+
+
+public static Juego juegoPorId(String idJuego) {
+	
+	Juego juego = null;
+	try {
+		Connection conn = Conexion.getInstancia().getConn();
+		String query = 
+			    "SELECT juego.idjuego, juego.titulo, juego.imagen, juego.descripcion, " +
+			    "GROUP_CONCAT(compania.nombre SEPARATOR ', ') AS todas_las_companias " +
+			    "FROM juego " +
+			    "LEFT JOIN juego_compania ON juego.idjuego = juego_compania.idjuego " +
+			    "LEFT JOIN compania ON juego_compania.id_comp = compania.idcompania " +
+			    "WHERE juego.idjuego = ? " +
+			    "GROUP BY juego.idjuego, juego.titulo, juego.imagen, juego.descripcion";
+		PreparedStatement resultado = conn.prepareStatement(query);
+		resultado.setString(1, idJuego);
+		ResultSet rs = resultado.executeQuery();
+		
+		if(rs.next()){
+			juego = new Juego();
+			
+			juego.setId_juego(rs.getString("idjuego"));
+			juego.setTitulo(rs.getString("titulo"));
+			juego.setImagen(rs.getString("imagen"));
+			juego.setDescripcion(rs.getString("descripcion"));
+			juego.setCompanias(rs.getString("todas_las_companias"));
+		}
+		rs.close();
+		resultado.close();
+	
+	}
+	catch(SQLException ex){
+		
+		
+		System.out.println("SQLException: " + ex.getMessage());
+	    System.out.println("SQLState: " + ex.getSQLState());
+	    System.out.println("VendorError: " + ex.getErrorCode());
+	}
+	
+	return juego;
+}}

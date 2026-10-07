@@ -18,12 +18,14 @@ import com.sun.net.httpserver.HttpHandler;
 
 import entities.Compania;
 import entities.Juego;
+import entities.Persona;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import data.Conexion;
 import data.DataCompania;
 import data.DataJuego;
+import data.Data_persona;
 import data.Cors;
 
 public class AbmcJuegos {
@@ -31,93 +33,60 @@ public class AbmcJuegos {
 	private static final SecretKey KEY = GeneracionWebToken.llaveJWT();
 	
 	
+	
+	public static class juegoid implements HttpHandler {
 
-	
-	
-	
-public static class juegoid implements HttpHandler{
-	
-	public void handle(HttpExchange exchange) throws IOException{
-		
-		Cors.controlCors(exchange);
-		
-		if (exchange.getRequestMethod().equals("OPTIONS")) {
+	    public void handle(HttpExchange exchange) throws IOException {
+	        Cors.controlCors(exchange);
 
-	        exchange.sendResponseHeaders(204, -1);
-	        exchange.close();
+	        if (exchange.getRequestMethod().equals("OPTIONS")) {
+	            exchange.sendResponseHeaders(204, -1);
+	            exchange.close();
+	            return;
+	        }
 
-	        return;
+	        String respuesta = "";
+	        int codigoestado = 200;
+	        Gson gson = new Gson();
+
+
+	      
+	        try {
+	            InputStream is = exchange.getRequestBody();
+	            String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+	            is.close();
+
+	            Juego jue = gson.fromJson(body, Juego.class);
+	            Juego juegoEncontrado = DataJuego.juegoPorId(jue.getId_juego());
+
+	            if (juegoEncontrado != null) {
+	                respuesta = gson.toJson(juegoEncontrado);
+	                codigoestado = 200;
+	            } else {
+	                respuesta = "Juego no encontrado";
+	                codigoestado = 404;
+	            }
+	        } catch (Exception e) {
+	            respuesta = "Error en el servidor";
+	            codigoestado = 500;
+	        }
+
+	        // 3. Enviar respuesta (directo el string en bytes, SIN llamar a gson.toJson otra vez)
+	        byte[] bytesRespuesta = respuesta.getBytes(StandardCharsets.UTF_8);
+	        exchange.getResponseHeaders().set("Content-Type", "application/json; charset=UTF-8");
+	        exchange.sendResponseHeaders(codigoestado, bytesRespuesta.length);
+	        OutputStream os = exchange.getResponseBody();
+	        os.write(bytesRespuesta);
+	        os.close();
 	    }
-		
-		Juego juego = null;
-		try {
-			String path = exchange.getRequestURI().getPath();
-			String[] partes = path.split("/");
-			String idJuego = partes[partes.length - 1];
-			Connection conn = Conexion.getInstancia().getConn();
-			
-			
-			String query = 
-				    "SELECT juego.idjuego, juego.titulo, juego.imagen, juego.descripcion, " +
-				    "GROUP_CONCAT(compania.nombre SEPARATOR ', ') AS todas_las_companias " +
-				    "FROM juego " +
-				    "LEFT JOIN juego_compania ON juego.idjuego = juego_compania.idjuego " +
-				    "LEFT JOIN compania ON juego_compania.id_comp = compania.idcompania " +
-				    "WHERE juego.idjuego = ? " +
-				    "GROUP BY juego.idjuego, juego.titulo, juego.imagen, juego.descripcion";
-			PreparedStatement resultado = conn.prepareStatement(query);
-			resultado.setString(1, idJuego);
-			ResultSet rs = resultado.executeQuery();
-			
-			if(rs.next()){
-				juego = new Juego();
-				
-				juego.setId_juego(rs.getString("idjuego"));
-				juego.setTitulo(rs.getString("titulo"));
-				juego.setImagen(rs.getString("imagen"));
-				juego.setDescripcion(rs.getString("descripcion"));
-				juego.setCompanias(rs.getString("todas_las_companias"));
-			}
-			rs.close();
-			resultado.close();
-			if (juego != null) {
-				Gson gson = new Gson();
-			    String jsonRespuesta = gson.toJson(juego);
-			    
-			    byte[] bytesRespuesta = jsonRespuesta.getBytes("UTF-8");
-			    exchange.sendResponseHeaders(200, bytesRespuesta.length);
-			    
-			    OutputStream os = exchange.getResponseBody();
-			    os.write(bytesRespuesta);
-			    os.close();
-			} else {
-				
-				exchange.sendResponseHeaders(404, -1);
-			    exchange.close();
-			}
-			
-			
-		}
-		catch(SQLException ex){
-			
-			
-			System.out.println("SQLException: " + ex.getMessage());
-		    System.out.println("SQLState: " + ex.getSQLState());
-		    System.out.println("VendorError: " + ex.getErrorCode());
-		}
-		String errorMsg = "Error en la base de datos";
-	    exchange.sendResponseHeaders(500, errorMsg.getBytes().length);
-	    OutputStream os = exchange.getResponseBody();
-	    os.write(errorMsg.getBytes());
-	    os.close();
 	}
-}
-	
 
 	
 	
 	
 public static class listajuegos implements HttpHandler {
+	
+	ArrayList<Juego> listadejuegos = new ArrayList<>();
 		
 		public void handle(HttpExchange exchange) throws IOException {
 			
@@ -132,57 +101,7 @@ public static class listajuegos implements HttpHandler {
 		        return;
 		    }
 			
-			ArrayList<Juego> listadejuegos = new ArrayList<>();
-			
-		
-			
-			try {
-				
-				Connection conn = Conexion.getInstancia().getConn();
-	
-				String query = "SELECT juego.idjuego, juego.titulo, juego.imagen, juego.descripcion, "
-			             + "       GROUP_CONCAT(compania.nombre SEPARATOR ', ') AS todas_las_companias "
-			             + "FROM juego "
-			             + "INNER JOIN juego_compania ON juego_compania.idjuego = juego.idjuego "
-			             + "INNER JOIN compania ON juego_compania.id_comp = compania.idcompania "
-			             + "WHERE LOWER(juego.estado) = ? "
-			             + "  AND LOWER(compania.estado) = ? "
-			             + "GROUP BY juego.idjuego;";
-
-			PreparedStatement resultado = conn.prepareStatement(query);
-			resultado.setString(1, "activo");
-			resultado.setString(2, "activo");
-			ResultSet rs = resultado.executeQuery();
-				
-				
-				while (rs.next()) {
-					
-					Juego juego = new Juego();
-					
-					juego.setId_juego(rs.getString("idjuego"));
-					juego.setTitulo(rs.getString("titulo"));
-					juego.setImagen(rs.getString("imagen"));
-					juego.setDescripcion(rs.getString("descripcion"));
-					juego.setCompanias(rs.getString("todas_las_companias"));
-					// agregar precio y genero y puntaje promedio
-					
-					listadejuegos.add(juego);
-					
-					
-				}
-				
-				
-		
-			}
-			
-			
-			catch(SQLException ex){
-				
-				
-				System.out.println("SQLException: " + ex.getMessage());
-			    System.out.println("SQLState: " + ex.getSQLState());
-			    System.out.println("VendorError: " + ex.getErrorCode());
-			}
+		    listadejuegos = DataJuego.listarJuegos();
 			
 			Gson gson = new Gson();
 		    String jsonRespuesta = gson.toJson(listadejuegos);
