@@ -211,7 +211,7 @@ public static String actualizarJuego(int idJuego, String nuevoTitulo, String est
     }
 }
 
-
+//soolo juegos activos
 public static ArrayList<Juego> listarJuegos() {
 	
 	ArrayList<Juego> listadejuegos = new ArrayList<>();
@@ -266,6 +266,57 @@ public static ArrayList<Juego> listarJuegos() {
 	
 	return listadejuegos;
 }
+
+
+
+public static ArrayList<Juego> listarTodosJuegos() {
+	
+	ArrayList<Juego> listadejuegos = new ArrayList<>();
+	
+	try {
+		
+		Connection conn = Conexion.getInstancia().getConn();
+
+		String query = "SELECT juego.idjuego, juego.titulo, juego.imagen, juego.descripcion from juego ";
+
+
+	PreparedStatement resultado = conn.prepareStatement(query);
+
+	ResultSet rs = resultado.executeQuery();
+		
+		
+		while (rs.next()) {
+			
+			Juego juego = new Juego();
+			
+			juego.setId_juego(rs.getString("idjuego"));
+			juego.setTitulo(rs.getString("titulo"));
+			juego.setImagen(rs.getString("imagen"));
+			juego.setDescripcion(rs.getString("descripcion"));
+			
+			// agregar precio y genero y puntaje promedio
+			
+			listadejuegos.add(juego);
+			
+			
+		}
+		
+		
+
+	}
+	
+	
+	catch(SQLException ex){
+		
+		
+		System.out.println("SQLException: " + ex.getMessage());
+	    System.out.println("SQLState: " + ex.getSQLState());
+	    System.out.println("VendorError: " + ex.getErrorCode());
+	}
+	
+	return listadejuegos;
+}
+
 
 
 

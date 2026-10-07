@@ -16,7 +16,7 @@ function MenuPropuestas(){
     const [mostrarFiltrados, setMostrarFiltrados] = useState(false);
 	
 	useEffect(() => {
-	        fetch(`${API_URL}/listajuegos`)
+	        fetch(`${API_URL}/listaTodosjuegos`)
 	            .then(res => res.json())
 	            .then(data => setJuegos(data))
 	            .catch(err => console.error("Error al traer juegos", err));

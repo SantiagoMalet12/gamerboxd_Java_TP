@@ -23,7 +23,7 @@ import servidor.AbmcCompania.bajalogicacompania;
 import servidor.AbmcCompania.crearcompania;
 import servidor.AbmcCompania.existeempresa;
 import servidor.AbmcCompania.devolverempresa;
-
+import servidor.AbmcJuegos.listaTodosjuegos;
 
 
 import servidor.AbmcUsuario.cambiarpassword;
@@ -55,6 +55,7 @@ import servidor.AbmcGrupo.recuperarGrupoPorMiembro;
 import servidor.AbmcGrupo.salirDeGrupo;
 import servidor.AbmcGrupo.dardebajagrupo;
 import servidor.AbmcGrupo.actualizardatosgrupo;
+import servidor.AbmcCompania.recuperarTodos;
 
 public class ServerHTTP {
 
@@ -110,6 +111,8 @@ public class ServerHTTP {
 		server.createContext("/dardebajagrupo", new dardebajagrupo());
 		server.createContext("/actualizardatosgrupo", new actualizardatosgrupo());
 		server.createContext("/obtenergruporeseniador", new obtenergruporeseniador());
+		server.createContext("/recuperarTodasCompanias", new recuperarTodos());
+		server.createContext("/listaTodosjuegos", new listaTodosjuegos());
 		
 
 		server.start();

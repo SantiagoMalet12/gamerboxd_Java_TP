@@ -119,6 +119,43 @@ public static class listajuegos implements HttpHandler {
 		}
 }
 
+
+public static class listaTodosjuegos implements HttpHandler {
+	
+	ArrayList<Juego> listadejuegos = new ArrayList<>();
+		
+		public void handle(HttpExchange exchange) throws IOException {
+			
+			
+			Cors.controlCors(exchange);
+			
+		    if (exchange.getRequestMethod().equals("OPTIONS")) {
+
+		        exchange.sendResponseHeaders(204, -1);
+		        exchange.close();
+
+		        return;
+		    }
+			
+		    listadejuegos = DataJuego.listarTodosJuegos();
+			
+			Gson gson = new Gson();
+		    String jsonRespuesta = gson.toJson(listadejuegos);
+		    
+		    
+		    byte[] bytesRespuesta = jsonRespuesta.getBytes("UTF-8");
+		    exchange.sendResponseHeaders(200, bytesRespuesta.length);
+		    
+		    
+		    OutputStream os = exchange.getResponseBody();
+		    os.write(bytesRespuesta);
+		    os.close();
+			
+			
+		}
+}
+
+
 public static class existejuego implements HttpHandler{
 	
 	public void handle(HttpExchange exchange) throws IOException{

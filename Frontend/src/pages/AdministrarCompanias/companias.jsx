@@ -17,7 +17,7 @@ function AdministrarCompanias(){
     const [alerta, setAlerta] = useState(null);
 	
 	useEffect(() => {
-	        fetch(`${API_URL}/listaempresas`) 
+	        fetch(`${API_URL}/recuperarTodasCompanias`) 
 	            .then(res => res.json())
 	            .then(data => setCompanias(data))
 	            .catch(err => console.error("Error al traer compañías", err));

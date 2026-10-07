@@ -222,7 +222,7 @@ public static Boolean validarempresaexistentenorepetida(String nombre, int id) {
 		
 		try {
 			
-			Connection conn = Conexion.getInstancia().getConn();  
+			Connection conn = Conexion.getInstancia().getConn();
 			
 			String nombremin = nombre.replace(" ", "").toLowerCase();
 		    
@@ -326,7 +326,7 @@ public static  LinkedList<Compania> recuperarCompanias() {
         if(rs!=null){rs.close();}
         if(stmt!=null){stmt.close();}
 
-	    conn.close();
+	
 	    
 	    
 
@@ -340,6 +340,7 @@ public static  LinkedList<Compania> recuperarCompanias() {
 	
 }
 
+//Solo companias activas
 public static ArrayList<Compania> listaCompanias() {
 	
 	   ArrayList<Compania> listadeempresas = new ArrayList<>();
@@ -377,6 +378,9 @@ public static ArrayList<Compania> listaCompanias() {
 	return listadeempresas;
 	
 }
+
+
+
 
 
 }
