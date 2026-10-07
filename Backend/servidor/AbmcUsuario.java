@@ -26,7 +26,7 @@ import io.jsonwebtoken.security.Keys;
 
 public class AbmcUsuario {
 	
-	//clave secreta de JWT
+
 	
 	private static final SecretKey KEY = GeneracionWebToken.llaveJWT();
 
@@ -38,9 +38,7 @@ public class AbmcUsuario {
 		
 		public void handle(HttpExchange exchange) throws IOException {
 			Persona p = new Persona();
-			String respuesta = "aaa no seee";
-			boolean exito; 
-			String rol;
+
 			Cors.controlCors(exchange);
 			
 		    if (exchange.getRequestMethod().equals("OPTIONS")) {
@@ -579,8 +577,7 @@ public class AbmcUsuario {
 					
 					respuesta = "todo bem";
 					exchange.sendResponseHeaders(200, respuesta.getBytes().length);
-					
-					
+
 				}
 				
 				else {
@@ -667,140 +664,61 @@ public class AbmcUsuario {
 		}
 	}
 	
-	
-	
-	
-	public static class Respuesta {
-		
-		
-		private String response;
-		private String token;
-		
-		
-		
-		public Respuesta(String texto, String token) {
-			
-			this.response = texto;
-			this.token = token;
-		}
 
-
-
-		public String getResponse() {
-			return response;
-		}
-
-
-
-		public void setResponse(String response) {
-			this.response = response;
-		}
-
-
-
-		public String getToken() {
-			return token;
-		}
-
-
-
-		public void setToken(String token) {
-			this.token = token;
-		}
-		
-		
-		
-		
-	}
 	
 	
 	
 	
-	public static class login implements HttpHandler  {
-		
-		
-		public void handle(HttpExchange exchange) throws IOException {
-			
-		    
-			Cors.controlCors(exchange);
-			
-			String respuesta = "Error";
-			String token = "";
-			Gson gson = new Gson();
-            Respuesta res = new Respuesta(respuesta, token);
-            String jsonResultado = gson.toJson(res);
-            
-			
-			
-		    if (exchange.getRequestMethod().equals("OPTIONS")) {
+	public static class login implements HttpHandler {
 
-		        exchange.sendResponseHeaders(204, -1);
-		        exchange.close();
+	    public void handle(HttpExchange exchange) throws IOException {
+	        Cors.controlCors(exchange);
 
-		        return;
-		    }
-			
-		    respuesta = "Funciona";
-			InputStream is = exchange.getRequestBody();
-			String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
-			is.close();
-			
-			Persona per_login = gson.fromJson(body, Persona.class);
-			
-			Persona per = Data_persona.buscar_solo_persona_pormail(per_login.getMail());
-			
-			if (per.getNombre_usuario() == null) {
-				
-				respuesta = "Usuario no existe o credenciales incorrectas";
-				exchange.sendResponseHeaders(401, jsonResultado.getBytes().length);
-	            return; 
+	        if ("OPTIONS".equalsIgnoreCase(exchange.getRequestMethod())) {
+	            exchange.sendResponseHeaders(204, -1);
+	            exchange.close();
+	            return;
 	        }
-			
-			if(per.getEstado().equals("inactivo")) {
-				
-				respuesta = "Usuario no existe o credenciales incorrectas";
-				res.setResponse(respuesta);
-				res.setToken(token);
-				jsonResultado = gson.toJson(res);
-				exchange.sendResponseHeaders(401, jsonResultado.getBytes().length);
-				return;
-						
-			}
-		
-			else {
-			
-			
-			Boolean resultado = Data_persona.buscar_persona(per_login.getMail(),per_login.getContrasena() );
-			if (resultado) {
-				System.out.println("Usuario existe y la contrasenia es correcta");
-				respuesta = "Usuario existee";
-				token = GeneracionWebToken.enviotoken(per_login.getMail(), per.getRol());
-				res.setResponse(respuesta);
-				res.setToken(token);
-				jsonResultado = gson.toJson(res);
-				exchange.sendResponseHeaders(200, jsonResultado.getBytes().length);
-				
-				
-				
-			}
-			else {
-				
-				respuesta = "Usuario no existe o credenciales incorrectas";
-				res.setResponse(respuesta);
-				res.setToken(token);
-				jsonResultado = gson.toJson(res);
-				exchange.sendResponseHeaders(401, jsonResultado.getBytes().length);
-			}
-			
-			}
-            
-            OutputStream os = exchange.getResponseBody();
-            os.write(jsonResultado.getBytes(StandardCharsets.UTF_8));
+
+	        InputStream is = exchange.getRequestBody();
+	        String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+	        is.close();
+
+	        Gson gson = new Gson();
+	        Persona per_login = gson.fromJson(body, Persona.class);
+
+	        String token = "";
+	        int codigoEstado = 401;
+
+	        try {
+	            Persona per = Data_persona.buscar_solo_persona_pormail(per_login.getMail());
+
+	            if (per != null && per.getNombre_usuario() != null && !"inactivo".equalsIgnoreCase(per.getEstado())) {
+	                Boolean resultado = Data_persona.buscar_persona(per_login.getMail(), per_login.getContrasena());
+
+	                if (Boolean.TRUE.equals(resultado)) {
+	                    System.out.println("Usuario existe y la contrasenia es correcta");
+	                    token = GeneracionWebToken.enviotoken(per_login.getMail(), per.getRol());
+	                    codigoEstado = 200;
+	                }
+	            }
+	        
+	        }
+	        catch (Exception e) {
+	        	
+	        	codigoEstado = 401;
+	        }
+	        String jsonRespuesta = "{\"token\":\"" + token + "\"}";
+	        byte[] bytes = jsonRespuesta.getBytes(StandardCharsets.UTF_8);
+
+	        exchange.getResponseHeaders().set("Content-Type", "application/json; charset=UTF-8");
+	        exchange.sendResponseHeaders(codigoEstado, bytes.length);
+
+	        OutputStream os = exchange.getResponseBody() ;
+            os.write(bytes);
             os.flush();
-            os.close();
-            exchange.close();
-		}  
-		
+	        exchange.close();
+	    }
 	}
 
 	
@@ -939,7 +857,7 @@ public class AbmcUsuario {
 			    os.write(mensaje.getBytes());
 			    os.close();
 			} catch (Exception e) {
-			    // Para otros errores generales
+			    // Para otros errores generaless
 			    e.printStackTrace();
 			
 			}
