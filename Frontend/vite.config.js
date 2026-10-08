@@ -7,6 +7,6 @@ export default defineConfig({
     include: ['react', 'react/jsx-runtime', 'react-dom', 'swiper/react']
   },
   build: {
-    cssMinify: 'esbuild'
+    cssMinify: false
   }
 })
