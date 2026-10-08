@@ -27,6 +27,7 @@ import io.jsonwebtoken.security.Keys;
 public class AbmcUsuario {
 	
 
+
 	
 	private static final SecretKey KEY = GeneracionWebToken.llaveJWT();
 
@@ -816,7 +817,8 @@ public class AbmcUsuario {
 			
 			
 			Gson gson = new Gson();
-			Persona per = gson.fromJson(body, Persona.class);	
+			Persona per = gson.fromJson(body, Persona.class);
+			
 			
 			persona_repetida = Data_persona.buscar_solo_persona_pormail(per.getMail());
 			
@@ -838,6 +840,8 @@ public class AbmcUsuario {
 			}
 			
 			else {
+				
+
 			
 			Data_persona.insertar_persona(per.getNombre_usuario(), per.getContrasena(), per.getMail(), "usuario", per.getFoto_perfil());		
 			exchange.sendResponseHeaders(200, mensaje.getBytes().length);

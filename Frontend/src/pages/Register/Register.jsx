@@ -10,7 +10,7 @@ function Registro(){
 	const [nombre, setnombre] = useState("");
 	const [mail, setmail] = useState("");
 	const [contrasenia, setcontrasenia] = useState("");
-	const [imagen, setimagen] = useState("");
+	const [imagen, setimagen] = useState("Vacio");
     
     // Estado para la alerta personalizada
     const [alerta, setAlerta] = useState(null);
