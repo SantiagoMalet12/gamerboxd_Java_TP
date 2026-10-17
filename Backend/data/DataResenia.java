@@ -27,14 +27,14 @@ public class DataResenia {
 	
 			Connection conn = Conexion.getInstancia().getConn();
 
-	
+			System.out.println("wrer");
 			PreparedStatement stmt = conn.prepareStatement("select * from resenia where id_juego=? and mail_usuario=?");
 
 	
 			stmt.setInt(1, id);
 			stmt.setString(2, mail);
 
-	
+			
 			ResultSet rs = stmt.executeQuery();
 	
 			while (rs.next()) {	
@@ -101,6 +101,7 @@ public class DataResenia {
 			Connection conn = Conexion.getInstancia().getConn();
 
 			// definir la query
+			System.out.println("recuperar");
 			PreparedStatement stmt = conn.prepareStatement("select * from resenia where mail_usuario=?");
 
 			// setear el/los parámetros
@@ -150,7 +151,7 @@ public class DataResenia {
 
 	    try {
 	        Connection conn = Conexion.getInstancia().getConn();
-	        
+	        System.out.println("borrado");
 	        
 	        String sql = "DELETE FROM resenia WHERE mail_usuario = ? AND id_juego = ?";
 	        PreparedStatement stmt = conn.prepareStatement(sql);
@@ -328,7 +329,7 @@ public class DataResenia {
 	
 	
 	public static boolean actualizar(Resenia r) {
-
+		System.out.println("borrado");
 	    String sql = "UPDATE resenia SET titulo = ?, descripcion = ?, puntaje = ? " +
 	                 "WHERE id_juego = ? AND mail_usuario = ?";
 	    Connection conn = Conexion.getInstancia().getConn();

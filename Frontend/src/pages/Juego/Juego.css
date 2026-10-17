@@ -1,6 +1,6 @@
 
 .detalle-juego-container {
-    max-width: 1000px;
+	max-width:60vw;
     margin: 2rem auto;
     padding: 2rem;
     background-color: var(--color1); 
@@ -21,17 +21,22 @@
 
 .game-header {
     display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: 2rem;
+    grid-template-columns: 60% 40%;
     margin-bottom: 3rem;
     background-color:var(--color0);
     padding:2rem;
+    gap: 3rem;
+    align-items: start;
+    height:60vh;
+}
+
+.game-pic{
+	
 }
 
 .game-header img {
     width: 100%;
-    border-radius: 12px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    height: 100%;
 }
 
 .user-text-info{
@@ -59,6 +64,7 @@
 	height:100%;
 	display:flex;
 	flex-direction:column;	
+	font-size:1.05rem;
 }
 
 .game-header span {
@@ -387,3 +393,139 @@
     from { transform: scale(0.9); opacity: 0; }
     to { transform: scale(1); opacity: 1; }
 }
+
+
+.detalle-juego-container {
+    width: 85vw;
+    margin: 5vh auto;
+    padding: 4vh 4vw;
+    background-color: var(--color1); 
+    border-radius: 2vh;
+    border: 0.2vh solid var(--color2);
+    box-shadow: 0 0 8vh var(--color1);
+}
+
+.paginaJuegoDetalle {
+    background-color: var(--color0);
+    padding-top: 10vh;
+    min-height: 100vh;
+}
+
+
+.game-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 4vw; 
+    margin-bottom: 6vh;
+    background-color: var(--color0);
+    padding: 4vh 3vw;
+    border-radius: 2vh;
+}
+
+
+.game-info-column {
+    width: 55%;
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+}
+
+
+.game-media-column {
+    width: 40%;
+    height: 45vh; 
+    display: flex;
+}
+
+.game-media-column img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    border-radius: 1.5vh;
+    box-shadow: 0 2vh 4vh rgba(0,0,0,0.5);
+}
+
+
+.game-description-wrapper {
+    position: relative;
+    max-height: 25vh; 
+    overflow: hidden;
+}
+
+.game-description {
+    color: var(--color6);
+    line-height: 1.6;
+    margin: 0;
+    font-size: 1rem;
+}
+
+
+.description-fade {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 10vh;
+    background: linear-gradient(to bottom, transparent, var(--color0));
+    pointer-events: none; 
+}
+
+
+.game-title {
+    font-size: 2.5rem;
+    margin: 0;
+    color: var(--color6);
+}
+
+.game-developers {
+    color: var(--color5);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: auto; 
+}
+
+.game-description-wrapper {
+    position: relative;
+    /* Quitamos el overflow: hidden de aquí para que el texto maneje su propio scroll */
+}
+
+.game-description {
+    color: var(--color6);
+    line-height: 1.6;
+    margin: 0;
+    font-size: 1rem;
+    
+    /* El límite de altura y el scroll van directamente al texto */
+    max-height: 25vh; 
+    overflow-y: auto; 
+    
+    /* IMPORTANTE: Espacio extra abajo para que, al scrollear hasta el final, 
+       la última línea de texto supere la zona de la niebla y se pueda leer clara */
+    padding-bottom: 8vh; 
+    padding-right: 1vw; /* Separa el texto de la barra de scroll */
+}
+
+
+.description-fade {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 8vh; 
+
+    background: linear-gradient(to bottom, transparent, var(--color0));
+
+    pointer-events: none; 
+}
+
+
+.game-description::-webkit-scrollbar {
+    width: 0.4vw;
+}
+
+.game-description::-webkit-scrollbar-thumb {
+    background: var(--color6); 
+    border-radius: 1vh;
+}
+

@@ -96,7 +96,7 @@ function JuegoResenia(){
 	      if (res.ok) {
 	        const data = await res.json();
 	        setJuego(data);
-			console.log(data)
+			
 	      } else {
 	        console.error("Error en la respuesta del servidor:", res.status);
 	      }
@@ -216,6 +216,25 @@ function JuegoResenia(){
 	  				setAlerta({ tipo: 'error', mensaje: err.message });
 	  			});
 	  };
+	  const renderEstrellas = (puntaje) => {
+	      const valor = parseFloat(puntaje) || 0;
+	      const estrellas = [];
+	      
+	      for (let i = 1; i <= 5; i++) {
+	          if (Math.round(valor) >= i) {
+	              estrellas.push(<span key={i} className="estrella-icono llena">★</span>);
+	          } else {
+	              estrellas.push(<span key={i} className="estrella-icono vacia">☆</span>);
+	          }
+	      }
+
+	      return (
+	          <div className="sistema-estrellas">
+	              <span className="estrellas-dibujo">{estrellas}</span>
+	              <span className="estrellas-numero">({valor.toFixed(1)})</span>
+	          </div>
+	      );
+	  };
 
 	  if (!juego) return <p>Cargando...</p>;
 
@@ -245,18 +264,28 @@ function JuegoResenia(){
 		        </div>
 		    )}
 	    <div className="detalle-juego-container">
-		      <header className="game-header">
-			  	<div className="gameInfo">
-					<div className="gameInfo1">
-				        <h1>{juego.name}</h1>
-				        <p>{juego.description_raw}</p>
-					</div>
-			        <span>Desarrolladores: {juego.developers}</span>
-				</div>
-				<div className="game-pic">
-					<img src={juego.background_image}/>
-				</div>
-		      </header>
+			<header className="game-header">
+			    <div className="game-info-column">
+			        <h1 className="game-title">{juego.name}</h1>
+			        
+			        
+			        <div className="game-rating">
+			            {renderEstrellas(juego.puntaje_promedio)}
+			        </div>
+	
+			        
+			        <div className="game-description-wrapper">
+			            <p className="game-description">{juego.description_raw}</p>
+			            <div className="description-fade"></div>
+			        </div>
+	
+			        <span className="game-developers">Desarrolladores: {juego.developers}</span>
+			    </div>
+	
+			    <div className="game-media-column">
+			        <img src={juego.background_image} alt={juego.name} />
+			    </div>
+			</header>
 			  {alerta && (
 			              <div classname="juego-alerta-wrapper">
 			                  <AlertMessage 
@@ -307,8 +336,7 @@ function JuegoResenia(){
 				)}
 	
 		        {resenias.map((r,index) => {
-					console.log('usuario:', usuario);
-					console.log('resenias:', resenias);
+					
 		        	const esPropia = usuario && r.usuario?.mail === usuario.mail;
 	
 		        	
@@ -378,7 +406,7 @@ function JuegoResenia(){
 							</div>
 						<h3 className="titulo-resenia">{r.titulo}</h3>
 			            <p>{r.descripcion}</p>
-			            <span className="puntaje-badge">Puntaje: {r.puntaje}/5</span>
+						<div className="puntaje-resenia">{renderEstrellas(r.puntaje)}</div>
 						
 						
 			          </div>

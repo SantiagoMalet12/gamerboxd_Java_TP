@@ -326,13 +326,13 @@ public static Juego juegoPorId(String idJuego) {
 	try {
 		Connection conn = Conexion.getInstancia().getConn();
 		String query = 
-			    "SELECT juego.idjuego, juego.titulo, juego.imagen, juego.descripcion, " +
+			    "SELECT juego.idjuego, juego.titulo, juego.imagen, juego.descripcion, juego.puntaje_promedio, " +
 			    "GROUP_CONCAT(compania.nombre SEPARATOR ', ') AS todas_las_companias " +
 			    "FROM juego " +
 			    "LEFT JOIN juego_compania ON juego.idjuego = juego_compania.idjuego " +
 			    "LEFT JOIN compania ON juego_compania.id_comp = compania.idcompania " +
 			    "WHERE juego.idjuego = ? " +
-			    "GROUP BY juego.idjuego, juego.titulo, juego.imagen, juego.descripcion";
+			    "GROUP BY juego.idjuego, juego.titulo, juego.imagen, juego.descripcion, juego.puntaje_promedio";
 		PreparedStatement resultado = conn.prepareStatement(query);
 		resultado.setString(1, idJuego);
 		ResultSet rs = resultado.executeQuery();
@@ -345,6 +345,7 @@ public static Juego juegoPorId(String idJuego) {
 			juego.setImagen(rs.getString("imagen"));
 			juego.setDescripcion(rs.getString("descripcion"));
 			juego.setCompanias(rs.getString("todas_las_companias"));
+			juego.setPuntaje_promedio(rs.getDouble("puntaje_promedio"));
 		}
 		rs.close();
 		resultado.close();
