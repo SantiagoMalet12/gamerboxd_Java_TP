@@ -139,7 +139,7 @@ function JuegoResenia(){
 	  useEffect(() => {
 	  	if (usuario && resenias.length > 0) {
 	  		const propia = resenias.find(
-	  			r => r.usuario.mail === usuario.mail
+	  			r => r.mail_usuario === usuario.mail
 	  		);
 	  		setReseniaPropia(propia);
 	  	} else {
@@ -238,6 +238,10 @@ function JuegoResenia(){
 
 	  if (!juego) return <p>Cargando...</p>;
 
+	  const miResenia = resenias.filter(r => r.mail_usuario === usuario?.mail);
+	  const otrasResenias = resenias.filter(r => r.mail_usuario !== usuario?.mail);
+	  const reseniasOrdenadas = [...miResenia, ...otrasResenias];
+
 
 	  return (
 		<section className="paginaJuegoDetalle">
@@ -335,9 +339,9 @@ function JuegoResenia(){
 				    </div>
 				)}
 	
-		        {resenias.map((r,index) => {
+		        {reseniasOrdenadas.map((r,index) => {
 					
-		        	const esPropia = usuario && r.usuario?.mail === usuario.mail;
+		        	const esPropia = usuario && r.mail_usuario === usuario.mail;
 	
 		        	
 		        	if (esPropia && editando) {
