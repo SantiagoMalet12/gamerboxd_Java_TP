@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+﻿import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { API_URL } from '../../config';
 import Footer from '../../components/Footer/Footer';
@@ -165,7 +165,7 @@ function ModificarJuego(){
                         <div className="modificar-juego-avatar-seccion">
                             <img 
                                 className="modificar-juego-avatar" 
-                                src={imagen || "https://picsum.photos/150"} 
+                                src={imagen || "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/500px-Default_pfp.svg.png?_=20220226140232"} 
                                 alt="Portada del juego" 
                             />
                             

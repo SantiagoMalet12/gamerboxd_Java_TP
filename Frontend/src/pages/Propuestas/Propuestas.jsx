@@ -1,4 +1,4 @@
-import './Propuestas.css';
+﻿import './Propuestas.css';
 import Footer from '../../components/Footer/Footer';
 import AlertMessage from '../../components/AlertMessage/AlertMessage';
 import { useState, useEffect } from 'react';
@@ -136,7 +136,7 @@ function Propuestas(){
                                                 <td>
                                                     <div className="tabla-img-container">
                                                         <img 
-                                                            src={propuesta.foto || "https://picsum.photos/50"} 
+                                                            src={propuesta.foto || "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/500px-Default_pfp.svg.png?_=20220226140232"} 
                                                             alt="Imagen de propuesta" 
                                                             className="tabla-img"
                                                         />
@@ -207,7 +207,7 @@ function Propuestas(){
                                                 <td>
                                                     <div className="tabla-img-container">
                                                         <img 
-                                                            src={propuesta.foto || "https://picsum.photos/50"} 
+                                                            src={propuesta.foto || "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/500px-Default_pfp.svg.png?_=20220226140232"} 
                                                             alt="Imagen de propuesta" 
                                                             className="tabla-img"
                                                         />

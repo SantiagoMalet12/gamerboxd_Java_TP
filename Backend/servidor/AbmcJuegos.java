@@ -27,6 +27,11 @@ import data.DataCompania;
 import data.DataJuego;
 import data.Data_persona;
 import data.Cors;
+import data.ApiJuego;
+import entities.Plataforma;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
+import java.util.List;
 
 public class AbmcJuegos {
 	
@@ -451,4 +456,105 @@ public static class existejuego implements HttpHandler{
 	}
 
 
+
+	/**
+	 * Consulta la API de RAWG.io para obtener los juegos mas populares
+	 * y persiste cada juego con sus companias y plataformas en la base de datos,
+	 * respetando integridad referencial y claves foraneas.
+	 *
+	 * @param cantidadTotal Cantidad deseada de juegos a importar (ej. 50).
+	 * @return Cantidad de juegos exitosamente persistidos.
+	 */
+	public static int popularJuegosDesdeRAWG(int cantidadTotal) {
+		System.out.println("=== Iniciando importacion de juegos desde RAWG.io ===");
+		ApiJuego api = new ApiJuego();
+		List<Integer> ids = api.obtenerIdsJuegosPopulares(cantidadTotal);
+		System.out.println("Se obtuvieron " + ids.size() + " IDs de juegos desde RAWG.");
+
+		int persistidos = 0;
+		for (int i = 0; i < ids.size(); i++) {
+			int id = ids.get(i);
+			try {
+				JsonObject detalle = api.obtenerDetalleJuego(id);
+				if (detalle == null) {
+					System.err.println("No se pudo obtener detalle para el juego ID: " + id);
+					continue;
+				}
+
+				String titulo = detalle.has("name") && !detalle.get("name").isJsonNull()
+						? detalle.get("name").getAsString()
+						: "Sin titulo";
+				String imagen = detalle.has("background_image") && !detalle.get("background_image").isJsonNull()
+						? detalle.get("background_image").getAsString()
+						: null;
+
+				String descripcion = "";
+				if (detalle.has("description_raw") && !detalle.get("description_raw").isJsonNull()
+						&& !detalle.get("description_raw").getAsString().trim().isEmpty()) {
+					descripcion = detalle.get("description_raw").getAsString();
+				} else if (detalle.has("description") && !detalle.get("description").isJsonNull()) {
+					descripcion = detalle.get("description").getAsString();
+				}
+
+				// Obtener companias desarrolladoras y publicadoras
+				List<Compania> companias = new ArrayList<>();
+				if (detalle.has("developers") && detalle.get("developers").isJsonArray()) {
+					for (JsonElement devElem : detalle.getAsJsonArray("developers")) {
+						JsonObject dev = devElem.getAsJsonObject();
+						Compania c = new Compania();
+						c.setId(dev.get("id").getAsInt());
+						c.setNombre(dev.get("name").getAsString());
+						c.setEstado("activo");
+						companias.add(c);
+					}
+				}
+				if (detalle.has("publishers") && detalle.get("publishers").isJsonArray()) {
+					for (JsonElement pubElem : detalle.getAsJsonArray("publishers")) {
+						JsonObject pub = pubElem.getAsJsonObject();
+						int pubId = pub.get("id").getAsInt();
+						boolean exists = companias.stream().anyMatch(c -> c.getId() == pubId);
+						if (!exists) {
+							Compania c = new Compania();
+							c.setId(pubId);
+							c.setNombre(pub.get("name").getAsString());
+							c.setEstado("activo");
+							companias.add(c);
+						}
+					}
+				}
+
+				// Obtener plataformas
+				List<Plataforma> plataformas = new ArrayList<>();
+				if (detalle.has("platforms") && detalle.get("platforms").isJsonArray()) {
+					for (JsonElement platElem : detalle.getAsJsonArray("platforms")) {
+						JsonObject platObj = platElem.getAsJsonObject();
+						if (platObj.has("platform") && platObj.get("platform").isJsonObject()) {
+							JsonObject p = platObj.getAsJsonObject("platform");
+							Plataforma plat = new Plataforma();
+							plat.setId(p.get("id").getAsInt());
+							plat.setNombre(p.get("name").getAsString());
+							plataformas.add(plat);
+						}
+					}
+				}
+
+				boolean ok = DataJuego.persistirJuegoCompleto(id, titulo, imagen, descripcion, companias, plataformas);
+				if (ok) {
+					persistidos++;
+					System.out.println("[" + (i + 1) + "/" + ids.size() + "] Persistido: " + titulo + " (ID: " + id + ")");
+				} else {
+					System.err.println("[" + (i + 1) + "/" + ids.size() + "] Error al persistir: " + titulo + " (ID: " + id + ")");
+				}
+
+				// Breve pausa para respetar las politicas de tasa de RAWG API
+				Thread.sleep(150);
+
+			} catch (Exception e) {
+				System.err.println("Error procesando juego ID " + id + ": " + e.getMessage());
+			}
+		}
+
+		System.out.println("=== Importacion finalizada. Total persistidos: " + persistidos + "/" + ids.size() + " ===");
+		return persistidos;
+	}
 }

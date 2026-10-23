@@ -378,7 +378,7 @@ function JuegoResenia(){
 							<div className="review-card-header">
 								<div className="reviewUserInfo">
 									<img 
-								          src={r.usuario.foto_perfil || `https://picsum.photos/200`} 
+								          src={r.usuario.foto_perfil || `https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/500px-Default_pfp.svg.png?_=20220226140232`} 
 								          className="user-avatar" 
 								        />
 										<div className="user-text-info">
