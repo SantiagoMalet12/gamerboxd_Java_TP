@@ -9,6 +9,15 @@ import { API_URL } from '../../config';
 
 const IMAGEN_DEFAULT = ["https://media.rawg.io/media/games/4cf/4cfc6b7f1850590a4634b08bfab308ab.jpg"];
 
+
+const RESENIAS_DESTACADAS = [
+  { id_juego: 28, mail_usuario: "pixelninja@gmail.com" },    
+  { id_juego: 3328, mail_usuario: "voidwalker@gmail.com" },   
+  { id_juego: 4200, mail_usuario: "retromaniac@gmail.com" },  
+  { id_juego: 58175, mail_usuario: "questgiver@gmail.com" },  
+  { id_juego: 3498, mail_usuario: "trophyhunter@yahoo.com" }, 
+];
+
 import Carrousel from '../../components/carrousel/Carrousel';
 
 import ReviewLandCard from '../../components/reviewLandCard/reviewLandCard';
@@ -34,33 +43,34 @@ export default function LandingPage() {
 	
 	const [resenas, setResenas] = useState([]);
 
-	  useEffect(() => {
-	    fetch(`${API_URL}/allresenias`) 
-	      .then(respuesta => respuesta.json())
-	      .then(datos => {
-			console.log("Datos crudos del servidor:", datos);
-			const juegosVistos = new Set();
-			        const resenasJuegosUnicos = datos.filter(resenia => {
-			          
-			          const id = resenia.id_juego;
-					  if (!juegosVistos.has(id)) {
-					              juegosVistos.add(id);
-					              return true;
-					            }
-						return false;
-						});
-						
+	useEffect(() => {
+		fetch(`${API_URL}/allresenias`) 
+			.then(respuesta => respuesta.json())
+			.then(datos => {
+				
+				const elegidas = RESENIAS_DESTACADAS
+					.map(dest => datos.find(r => Number(r.id_juego) === dest.id_juego && r.mail_usuario === dest.mail_usuario))
+					.filter(Boolean);
+
+				if (elegidas.length > 0) {
+					setResenas(elegidas);
+				} else {
 					
-				const resenasMezcladas = resenasJuegosUnicos.sort(()=> 0.5 - Math.random());
-				const aleatorias = resenasMezcladas.slice(0, 5);
-				
-				setResenas(aleatorias);
-				
+					const juegosVistos = new Set();
+					const fallback = datos.filter(r => {
+						const id = Number(r.id_juego);
+						if (!juegosVistos.has(id) && r.descripcion && r.descripcion.length <= 180 && Number(r.puntaje) >= 4) {
+							juegosVistos.add(id);
+							return true;
+						}
+						return false;
+					}).slice(0, 5);
+					setResenas(fallback);
+				}
 			})
-	      .catch(error => console.error("Error conexion:", error));
-	      
-	    
-	  }, []);
+			.catch(error => console.error("Error conexion:", error));
+	}, []);
+
   return (
 	  <section className="landingBody">
 	  	
@@ -80,7 +90,7 @@ export default function LandingPage() {
                   </div>
               </div>
 			  <h1 className="highlighterReviewsTitle">
-			  			  	Reseñas destacadas
+			  			  	Reseñas de usuarios
 			  			  </h1>
 			  <div className='highlightedReviews'>
 			    <swiper-container

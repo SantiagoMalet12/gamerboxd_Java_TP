@@ -1,4 +1,4 @@
-import './PaginaGrupo.css'
+﻿import './PaginaGrupo.css'
 import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
@@ -125,7 +125,7 @@ function PaginaGrupo(){
                     <div className="grupo-header">
                         <img 
                             className='grupo-imagen' 
-                            src={imagen || "https://picsum.photos/200"} 
+                            src={imagen || "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/500px-Default_pfp.svg.png?_=20220226140232"} 
                             alt={`Imagen de ${nombre}`}
                         />
                         <h2 className='grupo-titulo'>{nombre}</h2>

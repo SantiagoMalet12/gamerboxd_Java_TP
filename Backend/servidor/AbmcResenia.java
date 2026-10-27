@@ -363,7 +363,7 @@ public class AbmcResenia {
 	                    responder(exchange, 404, "{\"error\": \"no se encontro la resenia\"}");
 	                    return;
 	                }
-
+	                System.out.println("borrado");
 	                boolean borrado = DataResenia.eliminarResenia(mail, idJuego);
 
 	                if (borrado) {

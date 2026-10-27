@@ -1,4 +1,4 @@
-import './GruposCard.css'
+﻿import './GruposCard.css'
 import { useNavigate } from "react-router-dom";
 import { API_URL } from '../../config';
 
@@ -57,7 +57,7 @@ function GruposCard({ gru, onMostrarAlerta }) {
             <div className="card-grupo-imagen-container">
                 <img 
                     className='card-grupo-imagen' 
-                    src={gru.imagen || "https://picsum.photos/400"} 
+                    src={gru.imagen || "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/500px-Default_pfp.svg.png?_=20220226140232"} 
                     alt={`Perfil de ${gru.name}`}
                 />
             </div>

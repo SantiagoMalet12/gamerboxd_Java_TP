@@ -60,7 +60,7 @@ import servidor.AbmcCompania.recuperarTodos;
 
 public class ServerHTTP {
 
-	public static void main(String[] args) throws IOException {
+	public static  void main(String[] args) throws IOException {
 		
 	
 		
