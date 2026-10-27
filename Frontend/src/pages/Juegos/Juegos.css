@@ -89,3 +89,41 @@
     }
 
 }
+
+.sistema-estrellas {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 1rem;
+}
+
+.estrellas-dibujo {
+    display: flex;
+    gap: 2px;
+}
+
+.estrella-icono {
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+.estrella-icono.llena {
+    color: #ffb703; 
+    text-shadow: 0 0 8px rgba(255, 183, 3, 0.4);
+}
+
+.estrella-icono.vacia {
+    color: #4a4a6a; 
+}
+
+.estrellas-numero {
+    font-size: 0.95rem;
+    color: #a0a0b8;
+    font-weight: 600;
+}
+
+
+.puntaje-resenia .sistema-estrellas {
+    margin-bottom: 0;
+    margin-top: 12px;
+}
