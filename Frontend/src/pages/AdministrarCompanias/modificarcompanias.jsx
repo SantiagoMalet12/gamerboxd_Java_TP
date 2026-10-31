@@ -118,7 +118,7 @@ function Modificarcompanias(){
 		.then(response => {
 			if (response.status === 200) {
 				return response.json().then(data => {
-					console.log(data);
+					
 					setid(data.id);
 					setestado(data.estado);
 					setestadoconfirmado(data.estado); 

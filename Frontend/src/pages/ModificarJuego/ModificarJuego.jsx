@@ -210,7 +210,7 @@ function ModificarJuego(){
                             </button>
                             
                             <button className="btn-peligro" type="button" onClick={volver}>
-                                Cancelar y volver
+                                 Volver
                             </button>
                         </div>
                     </form>
