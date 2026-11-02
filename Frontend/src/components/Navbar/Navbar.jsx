@@ -176,7 +176,7 @@ export default function Navbar({ autenticado }) {
 
                     {autenticado && rol === "administrador" && (
                         <>
-                            <li><Link to="/AdministrarCompanias">Admninistrar companias</Link></li>
+                            <li><Link to="/AdministrarCompanias">Administrar companias</Link></li>
                             <li><Link to="/MenuPropuestas">Administrar juegos</Link></li>
                             <li><Link to="/CreacionAdmin">Crear administrador</Link></li>
                         </>

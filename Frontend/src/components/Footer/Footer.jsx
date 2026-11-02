@@ -19,10 +19,10 @@ export default function Footer() {
 				<Link to="/">Inicio</Link>
 				</li>
 				<li>
-					<Link to="/">Juegos</Link>
+					<Link to="/Juegos">Juegos</Link>
 				</li>
 				<li>
-					<Link to="/">Comunidad</Link>
+					<Link to="/ListadoGrupos">Comunidad</Link>
 				</li>
 
 			</ul>
@@ -37,9 +37,7 @@ export default function Footer() {
 							<li>
 								<a href="https://github.com/juabn/gamerboxd_Java_TP" target="_blank">GitHub</a>
 							</li>
-							<li>
-								<Link to="/">Sobre Nosotros</Link>
-							</li>
+							
 						</ul>
 			</div> 
 			</div>
